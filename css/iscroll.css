@@ -1,0 +1,267 @@
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html {
+	-ms-touch-action: none;
+}
+
+body,ul,li {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	display:block;
+}
+
+body {
+	font-size: 20px;
+	font-family: ubuntu, helvetica, arial;
+	overflow: hidden; /* this is important to prevent the whole page to bounce */
+}
+#hangout {
+  background-color: white;
+  height: 635px;
+  width: 900px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  transition: all 0.444s cubic-bezier(0.7, 0, 0.3, 1);
+  overflow: hidden;
+  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+#hangout.collapsed {
+  height: 55px;
+  box-shadow: none;
+}
+#hangout.collapsed #content {
+  opacity: 0;
+  height: 0;
+}
+#hangout.collapsed .control.floater {
+  transform: scale(0) rotate(90deg);
+  opacity: 0;
+}
+#hangout.collapsed .control.nav {
+  height: 0;
+  opacity: 0;
+}
+#scroller ul > li:nth-child(odd){
+	background: mintcream;
+}
+#scroller ul > li:nth-child(even){
+	background: wheat;
+}
+#header {
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 100%;
+    height: 65px;
+    line-height: 65px;
+	background: royalblue;
+	padding: 0;
+	color: #eee;
+	font-size: 20px;
+	text-align: center;
+	font-weight: bold;
+}
+#header p{
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    margin: 0px 10%;
+}
+#search_bar{
+	position: absolute;
+	z-index: 2;
+	top: 65px;
+	left: 0;
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	background: #ff6d9e;
+    opacity: 0.95;
+	padding: 0;
+	color: #eee;
+	font-size: 20px;
+	text-align: center;
+	font-weight: bold;
+	display:table;
+}
+#search_bar p{
+    display: inline-block;
+    position: relative;
+    line-height: 30px;
+    margin: 8px 10px 0px 10px;
+    vertical-align: top;
+    float: left;
+}
+#search_bar select{
+	margin: 10px 20px 0px 10px;;
+	height:30px;
+    float: left;
+	font-size:20px;
+}
+#search_bar input{
+    background-color: crimson;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    border-color: steelblue;
+    padding: 1px 15px;
+    border-width: 3px;
+    margin: 8px 10px;
+	float:left;
+	display:inline-block;
+	width:150px;
+}
+#search_bar br{
+	display:none;
+}
+
+
+#wrapper {
+	position: absolute;
+	z-index: 1;
+	top: 65px;
+	bottom: 0px;
+	left:9999px; /* Not a must - can be 0 - but it makes the appearance of the content a bit nicer */
+	width: 100%;
+	background: #ccc;
+	overflow: hidden;
+}
+
+#scroller {
+	position: absolute;
+	z-index: 1;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	width: 100%;
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	-o-text-size-adjust: none;
+	text-size-adjust: none;
+}
+
+#scroller ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	text-align: left;
+}
+
+#scroller li {
+	padding: 0 10px;
+	height: 80px;
+	line-height: 80px;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #fff;
+	background-color: #fafafa;
+	font-size: 14px;
+}
+.googleIcon{
+	cursor: pointer; 
+	border:0;
+	display:inline-block;
+    width: 54px;
+    height: 54px;
+    border: 3px solid #cccccc;
+	padding: 3px;
+    margin: 6px;
+}
+#search {
+	background:url('../image/ic_search_white_48dp_1x.png') 0 0 no-repeat;
+}
+#clear {
+	background:url('../image/ic_clear_white_48dp_1x.png') 0 0 no-repeat;
+}
+.pullDownLabel, .pullUpLabel {color:mediumblue;}
+.pullDown, .pullUp {display:block;text-align:center;background:transparent;height:65px;line-height:40px;font-weight:bold;font-size:0.8em;color:#888}
+.pullDown .pullDownIcon, .pullUp .pullUpIcon {display:inline-block;opacity:0.4;width:40px;height:40px;background:url('../image/pull_down.png') 0 0 no-repeat;-webkit-background-size:40px 80px;-ms-background-size:40px 80px; background-size:40px 80px;-webkit-transition-property:-webkit-transform;-ms-transition-property:-webkit-transform;-webkit-transition-duration:250ms;-ms-transition-duration:250ms}
+.pullDown .pullDownIcon {-webkit-transform:rotate(0deg) translateZ(0);-ms-transform:rotate(0deg) translateZ(0)}
+.pullUp .pullUpIcon  {-webkit-transform:rotate(-180deg) translateZ(0);-ms-transform:rotate(-180deg) translateZ(0)}
+.pullDown.flip .pullDownIcon {-webkit-transform:rotate(-180deg) translateZ(0);-ms-transform:rotate(-180deg) translateZ(0)}
+.pullUp.flip .pullUpIcon {-webkit-transform:rotate(0deg) translateZ(0);-ms-transform:rotate(0deg) translateZ(0)}
+.pullDown.loading .pullDownIcon, .pullUp.loading .pullUpIcon {background-position:0 100%;-webkit-transform:rotate(0deg) translateZ(0);-ms-transform:rotate(0deg) translateZ(0);-webkit-transition-duration:0ms;-ms-transition-duration:0ms;-webkit-animation-name:loading;-ms-animation-name:loading;-webkit-animation-duration:1s;-ms-animation-duration:1s;-webkit-animation-iteration-count:infinite;-ms-animation-iteration-count:infinite;-webkit-animation-timing-function:linear;-ms-animation-timing-function:linear}
+
+
+@-webkit-keyframes loading {
+	from {-webkit-transform:rotate(0deg) translateZ(0)}
+	to {-webkit-transform:rotate(360deg) translateZ(0)}
+}
+@-ms-keyframes loading {
+	from {-ms-transform:rotate(0deg) translateZ(0)}
+	to {-ms-transform:rotate(360deg) translateZ(0)}
+}
+@media screen and (max-device-width: 480px) {
+	#header{
+		min-height:150px;
+		line-height:150px;
+		font-size:240%;
+	}
+	#hangout {
+		width: 100% !important;
+		height: 100% !important;
+  	}
+	#wrapper {
+		top:150px;
+	}
+	#scroller li{
+		height:200px;
+		line-height:200px;
+		font-size:180%;
+	}
+	.pullDown, .pullUp {
+		height:100px;
+		line-height:100px;
+		font-size:180%;
+	}
+	.pullDown .pullDownIcon, .pullUp .pullUpIcon {
+		width:100px;
+		height:100px;
+		-webkit-background-size:100px 200px;
+		-ms-background-size:100px 200px; 
+		background-size:100px 200px;
+	}
+	#search_bar {
+		top: 150px;
+		min-height:300px;
+		font-size:270%;
+	}
+	#search_bar p{
+    	margin: 27px 5%;
+		display:block;
+	}
+	#search_bar select{
+    	margin: 10px;
+		height:70px;
+		font-size:120%;
+		display:block;
+	}
+	#search_bar input{
+    	height:70px;
+		font-size: 100%;
+	}
+	#search_bar br{
+		display:block;
+    	line-height: 100px;
+	}
+}
