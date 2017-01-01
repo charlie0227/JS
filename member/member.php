@@ -28,15 +28,15 @@ function get_ip(){
 	<?}else{#if LOGIN => MEMBER MANAGE?>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="UTF-8">
-	<link rel='stylesheet prefetch' href='http://cdn.materialdesignicons.com/1.1.70/css/materialdesignicons.min.css'>
-	<link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Roboto:300'>
+	<link rel='stylesheet prefetch' href='https://cdn.materialdesignicons.com/1.1.70/css/materialdesignicons.min.css'>
+	<link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Roboto:300'>
 	<link rel="stylesheet" href="../css/chatroom.css">
 	<?}?>
 </head>
 <body>
-	
+
 <style id="dynamic-styles"></style>
-<div id="hangout">  
+<div id="hangout">
 	<?if(!isset($_SESSION['id'])){#if NOT LOGIN => LOGIN PAGE?>
 		<div class="login_bar">
 			<div class="input input--hoshi">
@@ -56,54 +56,37 @@ function get_ip(){
 		</div>
 		<?}
 		else{#if LOGIN => MEMBER MANAGE?>
-			<div id="head" class="style-bg"> 
+			<div id="head" class="style-bg">
 				<h1>HEllo</h1>
-			</div>  
+			</div>
 			<div id="content">
 				<div class="overlay"></div>
-				<div class="card menu">
-					<div class="header">
-						<img src="http://s8.postimg.org/76bg2es2t/index.png" />
-						<h3></h3>
-					</div>
-					<div class="content">
-						<div class="i-group">
-							<input type="text" id="username">
-							<span class="bar"></span>
-							<label>Name</label>
-						</div>        
-						<br />
-						<div class="center">
-							<canvas id="colorpick" width="250" height="220" ></canvas>
-						</div>                        
-					</div>
-				</div> 
 				<div class="list-account">
 					<div class="meta-bar"><input class="nostyle search-filter" type="text" placeholder="Search" /></div>
-					<ul class="list mat-ripple">      
+					<ul class="list mat-ripple">
 						<!--friend-->
-					</ul> 
+					</ul>
 				</div>
 				<div class="list-text">
-					<ul class="list mat-ripple">      
+					<ul class="list mat-ripple">
 						<!--chat view-->
-					</ul> 
+					</ul>
 				</div>
 				<div class="list-phone">
-					
-					<ul class="list mat-ripple">      
+
+					<ul class="list mat-ripple">
 						<!--phone-->
 						<li id="log_out">
 							<p>Logout</p>
-						</li> 
-					</ul> 
+						</li>
+					</ul>
 				</div>
 				<div class="list-chat">
 					<ul class="chat">
 						<!--chat-->
 					</ul>
 					<div class="meta-bar chat">
-						<input class="nostyle chat-input" type="text" placeholder="Message..." /> 
+						<input class="nostyle chat-input" type="text" placeholder="Message..." />
 						<i class="mdi mdi-send"></i>
 					</div>
 				</div>
@@ -118,7 +101,7 @@ function get_ip(){
 						<i class="mdi mdi-settings"></i>
 					</li>
 				</ul>
-			</div>  
+			</div>
 			<div id="contact-modal" data-mode="add" class="card dialog">
 				<h3>Add Contact</h3>
 				<div class="i-group">
@@ -128,13 +111,13 @@ function get_ip(){
 				</div>
 				<div class="btn-container">
 					<span class="btn cancel">Cancel</span>
-					<span class="btn save">Save</span>      
+					<span class="btn save">Save</span>
 				</div>
 			</div>
 			<input type="hidden" id="ip" value="<?echo get_ip()?>">
 			<input type="hidden" id="myid" value="<?echo $_SESSION['id']?>">
 		<script src="../messenger/chat_client.js"></script>
-		<script src="../js/chatroom.js"></script>	
+		<script src="../js/chatroom.js"></script>
 		<?}?>
 	</div>
 </body>

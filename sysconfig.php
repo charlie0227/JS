@@ -7,7 +7,7 @@ $db_user = "charlie27";
 $db_password = "12345678";
 $dsn = "mysql:host=$db_host;dbname=$db_name";
 $db = new PDO($dsn, $db_user, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-$root_dir ="/home/charlie27/public_html";
+$root_dir ="/home/test123/public_html";
 date_default_timezone_set("Asia/Taipei");
 function write_log($status,$data)  //狀態 資料       
 {
@@ -31,6 +31,17 @@ function write_log($status,$data)  //狀態 資料
     fseek($fileopen, 0);
     fwrite($fileopen,$log);
     fclose($fileopen); 
+}
+function encrypt( $q ) {
+    $cryptKey  = 'qJB0rGtIn5UB1xG03efyCp';
+    $qEncoded      = base64_encode( mcrypt_encrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), $q, MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ) );
+    return( $qEncoded );
+}
+
+function decrypt( $q ) {
+    $cryptKey  = 'qJB0rGtIn5UB1xG03efyCp';
+    $qDecoded      = rtrim( mcrypt_decrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), base64_decode( $q ), MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ), "\0");
+    return( $qDecoded );
 }
 #$_SESSION['account'] = account
 #$_SESSION['name'] = name

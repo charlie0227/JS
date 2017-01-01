@@ -107,7 +107,7 @@ a {
 	border-style:none solid solid;
 	border-width:thin;
 	
-	background:url('http://s29.postimg.org/hc8f6q1s7/minflat_dark_material_design_wallpaper_4k_by.jpg');
+	background:url('images/background.jpg');
 	background-size: cover;
 }
 .login_bar{
@@ -126,8 +126,8 @@ a {
 } 
 .pick_bar{
     background: darkgray;
-	width:650px;
 	margin:auto;
+    height: 100%;
 }
 .pick_bar select{
 	height:30px;
@@ -166,6 +166,10 @@ a {
 .pick_bar > input.image{
 	height:30px;
 	margin: -10px 0;
+}
+.pick_bar span{
+	color:red;
+	
 }
 .login {
 	-moz-box-shadow: 1px 1px 0px 2px #9fb4f2;

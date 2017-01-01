@@ -22,12 +22,38 @@ $(function(){
 				$('select[name="item_location"]').append('<option value="'+list[i].id+'">'+list[i].location+'</option>');
 		}
 	);
+	
+	$.post('../php/get_item_class.php',{
+		dataType: 'json',
+		},function(data){
+			var obj = JSON.parse(data);
+			list = obj.result;
+			$('select[name="item_class"]').append('<option value=""></option>');
+			for(var i=0;i<list.length;i++)
+				$('select[name="item_class"]').append('<option value="'+list[i].id+'">'+list[i].thing+'</option>');
+		}
+	);
+	//prepare search item class
+	$.post('../php/get_item_location.php',{
+		dataType: 'json',
+		},function(data){
+			var obj = JSON.parse(data);
+			list = obj.result;
+			$('select[name="item_location"]').append('<option value=""></option>');
+			for(var i=0;i<list.length;i++)
+				$('select[name="item_location"]').append('<option value="'+list[i].id+'">'+list[i].location+'</option>');
+		}
+	);
+	
 	//icon click function
 	$("#search").on('click',function(){
 		$("#search_bar").fadeIn('slow');
 	});
 	$("#clear").on('click',function(){
 		parent.location.href='../index.php?q=drop';
+	});
+	$("#new").on('click',function(){
+		location.href='new.php';
 	});
 	$("#wrapper").on('mousedown tap',function(){
 		$("#search_bar").fadeOut('slow');
@@ -75,7 +101,7 @@ load_content = function(refresh, next_page) {
 		if (!refresh) {
 			// Loading the initial content
 			$.post('../php/get_item_list.php',{
-				way:'drop_item',
+				way:'drop_item_list',
 				stime:stime,
 				sclass:sclass,
 				slocation:slocation,
@@ -93,7 +119,7 @@ load_content = function(refresh, next_page) {
 						$('#wrapper > #scroller > ul').html('');
 						//add top10
 						for(var i=0 ; i<items_per_page && i<list.length; i++)
-							$('#wrapper > #scroller > ul').append('<li> ID: '+list[i].id+'地點'+list[i].location+'--- 時間'+list[i].time+'</li>');
+							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><span>種類: '+list[i].class+'</span><span>地點: '+list[i].location+' 時間'+list[i].time+'</span></li>');
 					}
 					//callback function
 					if (myScroll) {
@@ -113,7 +139,7 @@ load_content = function(refresh, next_page) {
 		} else if (refresh && !next_page) {
 			// Refreshing the content
 			$.post('../php/get_item_list.php',{
-				way:'drop_item',
+				way:'drop_item_list',
 				stime:stime,
 				sclass:sclass,
 				slocation:slocation,
@@ -131,7 +157,7 @@ load_content = function(refresh, next_page) {
 						$('#wrapper > #scroller > ul').html('');
 						//add top10
 						for(var i=0 ; i<items_per_page && i<list.length; i++)
-							$('#wrapper > #scroller > ul').append('<li> ID: '+list[i].id+'地點'+list[i].location+'--- 時間'+list[i].time+'</li>');
+							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><div><span>種類: '+list[i].class+'</span><span>地點: '+list[i].location+' 時間'+list[i].time+'</span></div><div></div></li>');
 					}
 					//callback function
 					myScroll.refresh();
@@ -147,7 +173,7 @@ load_content = function(refresh, next_page) {
 			// Loading the next-page content and refreshing
 			//add next 10
 			for(var i=(next_page-1)*items_per_page ; i<next_page*items_per_page && i<list.length; i++)
-				$('#wrapper > #scroller > ul').append('<li> ID: '+list[i].id+'地點'+list[i].location+'--- 時間'+list[i].time+'</li>');
+				$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><span>種類: '+list[i].class+'</span><span>地點: '+list[i].location+' 時間'+list[i].time+'</span></li>');
 			//callback function
 			myScroll.refresh();
 			pullActionCallback();
@@ -287,13 +313,91 @@ function trigger_myScroll(offset) {
 	}, 1000);
 }
 
-function loaded() {
-
+function loaded(id) {
 	load_content();
-
 }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-function search_bar(){
-	
+function view_item(id){
+	location.href='../drop/item.php?id='+id;
+}
+function get_position(){
+	if (window.navigator.geolocation==undefined) {
+		alert("此瀏覽器不支援地理定位功能!");
+	}
+	else {
+		var geolocation=window.navigator.geolocation; //取得 Geolocation 物件
+		//地理定位程式碼
+		var option={
+		  enableAcuracy:false,
+		  maximumAge:0,
+		  timeout:600000
+		  };
+		geolocation.getCurrentPosition(successCallback,
+								   errorCallback,
+								   option
+								   );
+		}
+		function successCallback(position) {
+			var geocoder;
+			geocoder = new google.maps.Geocoder();
+			
+			geocoder.geocode({
+			  'latLng': {lat: position.coords.latitude, lng: position.coords.longitude}
+			}, function(results, status) {
+				if (status === google.maps.GeocoderStatus.OK) {
+					if (results) {
+						var address = results[0].formatted_address;
+						document.getElementById('location').value = address;
+						var x = document.getElementById('item_location');
+						for(var i=0;i<x.options.length;i++){
+							if(address.match(x.options[i].text)==x.options[i].text && x.options[i].text != ""){
+								x.options[i].selected = true;
+							}
+						}
+					}
+				} else {
+					alert("Reverse Geocoding failed because: " + status);
+				}
+			});
+		}
+		
+		function errorCallback(error) {
+			var errorTypes={
+				0:"不明原因錯誤",
+				1:"使用者拒絕提供位置資訊",
+				2:"無法取得位置資訊",
+				3:"位置查詢逾時"
+				};
+			alert(errorTypes[error.code]);
+		}
+}
+function drop_submit(){
+	var item_class,item_location,location,item_content;
+	item_class = document.getElementById("item_class").value;
+	item_location = document.getElementById("item_location").value;
+	location = document.getElementById("location").value;
+	item_content = document.getElementById("item_content").value;
+	if(item_class!='' || item_location!='' || location!='' || item_content!=''){
+		$.post("../php/uploaditem.php",
+		{
+			way:'drop',
+			datatype:'json',
+			item_class:item_class,
+			item_location:item_location,
+			location:location,
+			item_content:item_content
+		},
+		function(data){
+			var obj = JSON.parse(data);
+			if(data)
+				alert("發佈成功")
+			location.href('../drop/drop.php');
+		});
+	}
+	else{
+		alert('請填入物品詳細資料')
+	}
+		
+		
 }

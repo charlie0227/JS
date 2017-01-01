@@ -3,8 +3,10 @@ var myip;
 var friendid;
 var myid;
 function loaded(){
-	socket = new WebSocket('ws://140.113.121.128:9377');
+	console.log('123');
+	socket = new WebSocket('wss://140.113.121.128:9377');
 	socket.onopen = function () {
+		console.log('here');
 		var jsonmsg={
 			type:'connect',
 			from_id: document.getElementById("myid").value,
@@ -23,9 +25,9 @@ function loaded(){
 			//outside chatroom
 			//ask DB for unseen and last chat
 			if(!$('.list-chat').attr('class').includes('shown')){
-				
-				var b = JSON.parse(o.text).from_id;	
-				var t = JSON.parse(o.text).content;	
+
+				var b = JSON.parse(o.text).from_id;
+				var t = JSON.parse(o.text).content;
 				console.log(b);
 				sessionStorage.setItem('from_id',b);
 				sessionStorage.setItem('content',t);
@@ -69,7 +71,7 @@ function loaded(){
 				}
 			}
 			//scroll to bottom
-			var $target = $('.list-chat'); 
+			var $target = $('.list-chat');
 			$target.animate({scrollTop: $target.height()*999}, 1000);
 		}
 	};

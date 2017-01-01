@@ -1,18 +1,64 @@
-
-var server = require('websocket').server, http = require('http');
+var fs = require('fs');
+var server = require('websocket').server;
 var req = require("request");
 var port = 1377;
+var express = require('express');
+
+var cfg = {
+    ssl: true,
+    port: 1377,
+    ssl_key: './ssl.key',
+    ssl_cert: './ssl.crt'
+  };
+//var httpServ = (cfg.ssl) ? require('https') : require('http');
+httpServ = require ('https');
+var WebSocketServer = require('ws').Server;
+var app = null;
+// dummy request processing
+var processRequest = function (req, res) {
+  console.log((new Date()) + ' Https server received request for ' + req.url);
+	res.writeHead(404);
+	res.end('All glory to WebSockets!\n');
+};
+if (cfg.ssl) {
+  console.log(fs.readFileSync(cfg.ssl_key));
+  console.log(fs.readFileSync(cfg.ssl_cert));
+	app = httpServ.createServer({
+	// providing server with  SSL key/cert
+		key: fs.readFileSync(cfg.ssl_key),
+		cert: fs.readFileSync(cfg.ssl_cert)
+	}, processRequest);
+  console.log('GG');
+}
+else{
+	app = httpServ.createServer(processRequest).listen(cfg.port);
+}
+
+
+app.listen(cfg.port,function(){
+  console.log(' Https server is listening on port ' + cfg.port);
+});
+
+// passing or reference to web server so WS would knew port and SSL capabilities
+var socket = new server({
+  httpServer: app ,
+  autoAcceptConnections: true
+});
+/*
 var socket = new server({
     httpServer: http.createServer().listen(1377)
 });
-console.log("Server listening on port*"+port);
+*/
+//console.log("Server listening on port*"+port);
 
 var connections = new Array();
-
-
+socket.on('connection', function (wsConnect) {
+    wsConnect.on('message', function (message) {
+      console.log(message);
+    });
+  });
 socket.on('request', function(request) {
     var connection = request.accept(null, request.origin);
-
 	connection.addListener('message',function(msg){
 		//console.log(msg.utf8Data);
 		var o = JSON.parse(msg.utf8Data);
@@ -33,9 +79,9 @@ socket.on('request', function(request) {
 	        console.log(date+ip+"<Connection> position: "+connections.length+" from_id: "+ o.from_id+" established.");
 		}
         if(o.type=="prepare"){
-            
+
             //prepare the chat record
-			req('http://140.113.121.128:9080/~charlie27/messenger/chat_record.php',{
+			req('https://www.charlie27.me/~charlie27/messenger/chat_record.php',{
                 method:"POST",
                 form:{
                     way:'load',
@@ -48,7 +94,7 @@ socket.on('request', function(request) {
                 } else {
                     //console.log(response.statusCode, body);
                     var jsonmsg=JSON.parse(body);
-                    //send chat record to from_id 
+                    //send chat record to from_id
                     from_send = send_to_id(o.from_id,jsonmsg);
                     console.log(date+ip+"<Prepare> from_id: "+ connection.id+" dest_id: "+o.dest_id+" chat record prepared.");
                 }
@@ -76,11 +122,11 @@ socket.on('request', function(request) {
             //offline message
 			else
                 console.log(date+ip+"<Offline Message> from_id: "+ o.from_id+" dest_id: "+o.dest_id+" content: "+o.content);
-			
+
 			//dest unseen num+1
 			unseen_add(date,ip,o.dest_id,o.from_id);
             //go DB update chat record
-            req('http://140.113.121.128:9080/~charlie27/messenger/chat_record.php',{
+            req('https://www.charlie27.me/~charlie27/messenger/chat_record.php',{
                 method:"POST",
                 form:{
                     way:'save',
@@ -99,13 +145,13 @@ socket.on('request', function(request) {
             });
         }
 	});
-	
+
     connection.on('close', function(code,reason) {
         ;
     });
-	
+
 });
-//function use dest_id to find target connection 
+//function use dest_id to find target connection
 function send_to_id(id,jsonmsg){
     var flag=false;
     for(var i=0; i<connections.length; i++)
@@ -117,7 +163,7 @@ function send_to_id(id,jsonmsg){
 }
 //function set unseen num = 0
 function unseen_clear(date,ip,from_id,dest_id){
-	req('http://140.113.121.128:9080/~charlie27/messenger/chat_record.php',{
+	req('https://www.charlie27.me/~charlie27/messenger/chat_record.php',{
 		method:"POST",
 		form:{
 			way:'unseen_clear',
@@ -135,7 +181,7 @@ function unseen_clear(date,ip,from_id,dest_id){
 	});
 }
 function unseen_add(date,ip,from_id,dest_id){
-	req('http://140.113.121.128:9080/~charlie27/messenger/chat_record.php',{
+	req('https://www.charlie27.me/~charlie27/messenger/chat_record.php',{
 		method:"POST",
 		form:{
 			way:'unseen_add',
