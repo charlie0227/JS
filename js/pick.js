@@ -28,8 +28,14 @@ $(function(){
         maxFileSize: 6,
 		id:55,
         allowed: ['jpg', 'gif', 'txt', 'png', 'pdf'],
-		maxNumberOfFiles: 3
-        ,onEachUpload:function(file){alert('上傳完成');parent.location.href="../index.php?q=drop"}
+		maxNumberOfFiles: 3,
+		onEachUpload:function(file){
+			//alert('上傳完成'); 
+		},
+		onUpload:function(file){
+			alert('上傳完成'); 
+			parent.location.href="../index.php?q=drop";
+		}
     });
 	//jquery listen
 	$('#location').on('blur',function(){

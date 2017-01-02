@@ -594,7 +594,7 @@
                 } catch (err) {
                     data = responseData;
                 }
-				alert(responseData);
+				//alert(responseData);
                 if (thisS.options.responseValidation) {
                     var valData = thisS.options.responseValidation;
                     if (typeof valData.validationKey === 'object' && valData.resultKey == 'validationKey') {

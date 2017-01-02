@@ -29,25 +29,33 @@ if($way=="drop_item_list"){
 	$sth->execute();
 	$result = $sth->fetchAll();
 	if($result){
+		//count distance
 		for($i=0;$i<count($result);$i++){
-			if($result[$i]['geometry']!='' && $u_lat!=''  && $u_lng!=''){
+			if($result[$i]['geometry']!='' && $u_lat!='' && $u_lng!=''){
 				$r_lat = json_decode($result[$i]['geometry'])->lat;
 				$r_lng = json_decode($result[$i]['geometry'])->lng;
-				$result[$i]['distance']=parse_dis(distance($u_lng,$u_lat,$r_lng,$r_lat));
+				$result[$i]['distance']=distance($u_lng,$u_lat,$r_lng,$r_lat);
 			}
-			else
+			else{
 				$result[$i]['distance']='';
+			}
 		}
+		//sort distance 
 		if($ssort='dis'){
 			usort($result,function($x,$y){
 				//descending
-				if($x['distance']=='')
+				if($x['distance']=='' && $x['distance']!=0)
 					return 1;
-				else if($y['distance']=='')
+				else if($y['distance']=='' && $y['distance']!=0)
 					return -1;
 				else
-					return $x['distance'] <=> $y['distance'];
+					return $x['distance'] > $y['distance'];
 			});
+		}
+		//distance display
+		for($i=0;$i<count($result);$i++){
+			if($result[$i]['distance']!='' || $result[$i]['distance']=='0')
+				$result[$i]['distance']=parse_dis($result[$i]['distance']);
 		}
 		$data->result=$result;
 		$data->message="OK";

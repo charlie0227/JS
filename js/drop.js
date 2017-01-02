@@ -30,7 +30,7 @@ $(function(){
 		$("#search_bar").fadeIn('slow');
 	});
 	$("#clear").on('click',function(){
-		parent.location.href='../index.php?q=drop';
+		location.href='../drop/drop.html';
 	});
 	$("#new").on('click',function(){
 		location.href='new.php';
@@ -45,16 +45,16 @@ $(function(){
 	$('.sort_but').on('click',function(){
 		if($(this).val()=='依距離排序'){
 			$(this).val('依時間排序');
-			list_position();
 			/*sort by distance*/
+			list_position();
 			
 		}
 		else{
 			$(this).val('依距離排序');
 			/*sort by time*/
-			var next_url=parent.location.search;
+			var next_url=(location.search=='')?'?':location.search;
 			next_url = setQueryVariable(next_url,'ssort','time');
-			parent.location.href = parent.location.href.split('?')[0]+next_url;
+			location.href = location.href.split('?')[0]+next_url;
 		}
 	});
 	//jquery listen
@@ -64,20 +64,20 @@ $(function(){
 	//search GET url
 	var sql_search="";
 	$("#search_submit").on('click',function(){
-		var next_url=parent.location.search;
+		var next_url=(location.search=='')?'?':location.search;
 		if($('select[name="item_time"]').val())
 		 	next_url = setQueryVariable(next_url,'stime',$('select[name="item_time"]').val());
 		if($('select[name="item_class"]').val())
 		 	next_url = setQueryVariable(next_url,'sclass',$('select[name="item_class"]').val());
 		if($('select[name="item_location"]').val())
 		 	next_url = setQueryVariable(next_url,'slocation',$('select[name="item_location"]').val());
-		parent.location.href = parent.location.href.split('?')[0]+next_url;
+		location.href = location.href.split('?')[0]+next_url;
 	});
 	
 });
 //parse GET url
 function getQueryVariable(variable) {
-    var query = parent.location.search.substring(1);
+    var query = location.search.substring(1);
     var vars = query.split('&');
     for (var i = 0; i < vars.length; i++) {
         var pair = vars[i].split('=');
@@ -450,11 +450,11 @@ function list_position(){
 			lat:position.coords.latitude.toFixed(6),
 			lng:position.coords.longitude.toFixed(6)
 		};
-		var next_url=parent.location.search;
+		var next_url=(location.search=='')?'?':location.search;
 		next_url = setQueryVariable(next_url,'ssort','dis');
 		next_url = setQueryVariable(next_url,'lat',geometry.lat);
 		next_url = setQueryVariable(next_url,'lng',geometry.lng);
-		parent.location.href = parent.location.href.split('?')[0]+next_url;
+		location.href = location.href.split('?')[0]+next_url;
 	}
 	function errorCallback(error) {
 		var errorTypes={
@@ -487,7 +487,7 @@ function drop_submit(){
 			var obj = JSON.parse(data);
 			if(data)
 				alert("發佈成功");
-			parent.location.href ='../index.php?q=member';
+			location.href ='../index.php?q=member';
 		});
 	}
 	else{
