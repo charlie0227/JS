@@ -20,9 +20,11 @@ require_once "../sysconfig.php";
 		<p>詳細地點</p>
 		<input class="text" type="text" id="location"><input class="image" type="image" src="../image/location.png" onclick="get_position()">
 		<!--Google GPS-->
-		<p>圖片</p><p id="ps1">最多只能上傳三張圖片<p>
-		<input type="file" name="file" multiple id="ssi-upload"/>
-		<!--AJAX upload-->
+		<p>圖片</p><span>※最多只能上傳三張圖片</span><span id="ps1"></span>
+		<div id="upload_bar">
+			<input type="file" name="file" multiple id="ssi-upload"/>
+		</div>
+			<!--AJAX upload-->
 		<p>物品描述</p>
 		<textarea id="item_content"></textarea><br>
 		<input type="hidden" id="item_id" value="">

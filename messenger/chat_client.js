@@ -13,6 +13,7 @@ function loaded(){
 			ip:document.getElementById("ip").value,
 		};
 		socket.send(JSON.stringify(jsonmsg));
+		console.log('socket.send');
 	};
 
 	socket.onmessage = function (message) {

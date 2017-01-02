@@ -8,7 +8,8 @@ var cfg = {
     ssl: true,
     port: 1377,
     ssl_key: './ssl.key',
-    ssl_cert: './ssl.crt'
+    ssl_cert: './ssl.crt',
+    ssl_ca: './ssl.ca'
   };
 //var httpServ = (cfg.ssl) ? require('https') : require('http');
 httpServ = require ('https');
@@ -26,9 +27,9 @@ if (cfg.ssl) {
 	app = httpServ.createServer({
 	// providing server with  SSL key/cert
 		key: fs.readFileSync(cfg.ssl_key),
-		cert: fs.readFileSync(cfg.ssl_cert)
+		cert: fs.readFileSync(cfg.ssl_cert),
+    ca: fs.readFileSync(cfg.ssl_ca)
 	}, processRequest);
-  console.log('GG');
 }
 else{
 	app = httpServ.createServer(processRequest).listen(cfg.port);
@@ -42,7 +43,9 @@ app.listen(cfg.port,function(){
 // passing or reference to web server so WS would knew port and SSL capabilities
 var socket = new server({
   httpServer: app ,
-  autoAcceptConnections: true
+  secure: false,
+  strictSSL: false,
+  autoAcceptConnections: false
 });
 /*
 var socket = new server({
@@ -53,14 +56,16 @@ var socket = new server({
 
 var connections = new Array();
 socket.on('connection', function (wsConnect) {
+  console.log('connection');
     wsConnect.on('message', function (message) {
       console.log(message);
     });
   });
 socket.on('request', function(request) {
     var connection = request.accept(null, request.origin);
+    console.log("client connection accepted");
 	connection.addListener('message',function(msg){
-		//console.log(msg.utf8Data);
+		console.log(msg.utf8Data);
 		var o = JSON.parse(msg.utf8Data);
 		var d = new Date();
         var date = '['+d.getFullYear()+'-'

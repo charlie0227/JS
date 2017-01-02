@@ -1,7 +1,6 @@
 <?php
 require_once "../sysconfig.php";
 $item_id =isset($_GET['id'])?encrypt($_GET['id']):'';
-$item_id=$_GET['id'];
 ?>
 <html>
 	<head>
@@ -9,7 +8,7 @@ $item_id=$_GET['id'];
 		<script src="../js/jquery-3.1.1.min.js"></script>
 		<script src="../js/item.js"></script>
 	</head>
-	<body onload="load(<?echo $item_id?>)">
+	<body onload="load('<?echo $item_id?>')">
 		<div id="hangout">
 			<div class="pick_bar">
 				<p>上傳時間</p>
@@ -23,16 +22,17 @@ $item_id=$_GET['id'];
 				<p>圖片</p>
 				<span id="img"></span>
 				<p>物品描述</p>
-				<span id="item_class"></span>
+				<span id="descript"></span>
+				<br><br>
 				<?if(isset($_SESSION['id'])){?>
-				<input type="button" value="是我的，馬上連絡拾獲人" onclick="add_friend();">
+				<input class="button" type="button" value="連絡拾獲人" onclick="add_friend('<?echo $item_id?>');">
 				<?}else{?>
-				<input type="button" value="是我的，馬上連絡拾獲人(須登入)" onclick="alert('請先登入確定身分');parent.location.href='../index.php?q=member';">	
+				<input class="button" type="button" value="連絡拾獲人" onclick="alert('請先登入確定身分');parent.location.href='../index.php?q=member';">	
 				<?}?>
-				<input type="button" value="返回物品列表" onclick="location.href='../drop/drop.html'">
+				<input class="button" type="button" value="返回物品列表" onclick="location.href='../drop/drop.html'">
 				<div class="other_possible">
 				</div>
-				<input type="hidden" id="item_id" value="<?echo $item_id?>"/>
+				<br><br>
 			</div>	
 		</div>
 	</body>

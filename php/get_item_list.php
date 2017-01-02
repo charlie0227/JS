@@ -7,21 +7,18 @@ $drop_id=isset($_POST['drop_id'])?decrypt($_POST['drop_id']):'';
 $stime=isset($_POST['stime'])?$_POST['stime']:'';
 $sclass=isset($_POST['sclass'])?$_POST['sclass']:'';
 $slocation=isset($_POST['slocation'])?$_POST['slocation']:'';
+$ssort=isset($_POST['ssort'])?$_POST['ssort']:'';
 //handle search method
 $search_sql="";
-if($stime!="" || $sclass!="" || $slocation!="")
-	$search_sql.=' AND ';
 if($stime!="")
-	$search_sql.="TIMESTAMPDIFF(DAY,'".date("Y-m-d H:i:s",time())."',a.time)<".$stime;
-if($sclass!="" || $slocation!="")
-	$search_sql.=" AND ";
+	$search_sql.=" AND TIMESTAMPDIFF(DAY,a.time,'".date("Y-m-d H:i:s",time())."')<=".$stime;
 if($sclass!="")
-	$search_sql.='a.item_class='.$sclass;
+	$search_sql.=' AND a.item_class='.$sclass;
 if($slocation!="")
-	$search_sql.=" AND ";
-if($slocation!="")
-	$search_sql.='a.item_location='.$slocation;
+	$search_sql.=' AND a.item_location='.$slocation;
 if($way=="drop_item_list"){
+	$u_lat = isset($_POST['lat'])?$_POST['lat']:'';
+	$u_lng = isset($_POST['lng'])?$_POST['lng']:'';
 	$sql = "SELECT *,a.id as id,b.thing as class,c.location as location FROM `item_drop` a 
 	JOIN `item_class` b
 	JOIN `item_location` c
@@ -32,6 +29,26 @@ if($way=="drop_item_list"){
 	$sth->execute();
 	$result = $sth->fetchAll();
 	if($result){
+		for($i=0;$i<count($result);$i++){
+			if($result[$i]['geometry']!='' && $u_lat!=''  && $u_lng!=''){
+				$r_lat = json_decode($result[$i]['geometry'])->lat;
+				$r_lng = json_decode($result[$i]['geometry'])->lng;
+				$result[$i]['distance']=parse_dis(distance($u_lng,$u_lat,$r_lng,$r_lat));
+			}
+			else
+				$result[$i]['distance']='';
+		}
+		if($ssort='dis'){
+			usort($result,function($x,$y){
+				//descending
+				if($x['distance']=='')
+					return 1;
+				else if($y['distance']=='')
+					return -1;
+				else
+					return $x['distance'] <=> $y['distance'];
+			});
+		}
 		$data->result=$result;
 		$data->message="OK";
 		$data->error=0;
@@ -66,11 +83,13 @@ if($way=="drop_item"){
 	$result=$sth->fetchObject();
 	$data->result=$result;
 	//fetch img
-	$sql = "SELECT * FROM `item_drop_img` a WHERE a.item_id = ?";
+	$sql = "SELECT * FROM `item_drop_img` WHERE `item_id` = ?";
 	$sth = $db->prepare($sql);
 	$sth->execute(array($drop_id));
-	$result=$sth->fetchObject();
-	$data->img=$result;
+	if($result_img=$sth->fetchAll())
+		$data->img_url=$result_img;
+	else
+		$data->img_url='';
 	
 	$sql = "SELECT *,a.id as id,b.thing as item_class,c.location as item_location, a.location as location
 	FROM `item_drop` a 
@@ -89,5 +108,26 @@ if($way=="drop_item"){
 	$data->error=0;
 }
 echo json_encode($data);
+
+function distance($lng1,$lat1,$lng2,$lat2){
+	//将角度转为狐度
+	$radLat1=deg2rad(floatval($lat1));//deg2rad()函数将角度转换为弧度
+	$radLat2=deg2rad(floatval($lat2));
+	$radLng1=deg2rad(floatval($lng1));
+	$radLng2=deg2rad(floatval($lng2));
+	$a=$radLat1-$radLat2;
+	$b=$radLng1-$radLng2;
+	$s=2*asin(sqrt(pow(sin($a/2),2)+cos($radLat1)*cos($radLat2)*pow(sin($b/2),2)))*6378.137*1000;
+	return round($s,0);
+}
+function parse_dis($dis){
+	$unit = '公尺';
+	$dis = floatval($dis);
+	if($dis>=1000){
+		$dis=round($dis/1000,1);
+		$unit = '公里';
+	}
+	return $dis.$unit;
+}
 ?>
 

@@ -9,16 +9,20 @@ function load(drop_id){
 			$('#item_class').append(obj.result.item_class);
 			$('#item_location').append(obj.result.item_location);
 			$('#location').append(obj.result.location);
-			$('#img').append(obj.result.img_url);
+			if(obj.img_url!=''){
+				for(var i=0;i<obj.img_url.length;i++)
+					$('#img').append('<img src="https://www.charlie27.me/~test123'+obj.img_url[i].url+'">');
+			}
+			$('#descript').append(obj.result.descript);
+		
 		}
 	);
 }
-function add_friend(){
+function add_friend(drop_id){
 	$.post('../php/add_friend.php',{
-		item_id:document.getElementById('item_id').val()
+		drop_id:drop_id
 		},function(data){
-			//console.log(data);
-			var obj=JSON.parse(data);
+			parent.location.href='../index.php?q=member';
 		}
 	);
 }

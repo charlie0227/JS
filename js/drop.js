@@ -1,28 +1,8 @@
+var geometry='';
 $(function(){
+	
 	$('#search_bar').hide();
 	//prepare search item class
-	$.post('../php/get_item_class.php',{
-		dataType: 'json',
-		},function(data){
-			var obj = JSON.parse(data);
-			list = obj.result;
-			$('select[name="item_class"]').append('<option value=""></option>');
-			for(var i=0;i<list.length;i++)
-				$('select[name="item_class"]').append('<option value="'+list[i].id+'">'+list[i].thing+'</option>');
-		}
-	);
-	//prepare search item class
-	$.post('../php/get_item_location.php',{
-		dataType: 'json',
-		},function(data){
-			var obj = JSON.parse(data);
-			list = obj.result;
-			$('select[name="item_location"]').append('<option value=""></option>');
-			for(var i=0;i<list.length;i++)
-				$('select[name="item_location"]').append('<option value="'+list[i].id+'">'+list[i].location+'</option>');
-		}
-	);
-	
 	$.post('../php/get_item_class.php',{
 		dataType: 'json',
 		},function(data){
@@ -58,16 +38,40 @@ $(function(){
 	$("#wrapper").on('mousedown tap',function(){
 		$("#search_bar").fadeOut('slow');
 	});
+	if(getQueryVariable('ssort')=='dis')
+		$('.sort_but').val('依時間排序')
+	else
+		$('.sort_but').val('依距離排序')
+	$('.sort_but').on('click',function(){
+		if($(this).val()=='依距離排序'){
+			$(this).val('依時間排序');
+			list_position();
+			/*sort by distance*/
+			
+		}
+		else{
+			$(this).val('依距離排序');
+			/*sort by time*/
+			var next_url=parent.location.search;
+			next_url = setQueryVariable(next_url,'ssort','time');
+			parent.location.href = parent.location.href.split('?')[0]+next_url;
+		}
+	});
+	//jquery listen
+	$('#location').on('blur',function(){
+		address_to_geometry($(this).val());
+	});
 	//search GET url
 	var sql_search="";
 	$("#search_submit").on('click',function(){
+		var next_url=parent.location.search;
 		if($('select[name="item_time"]').val())
-		 	sql_search+='&stime='+$('select[name="item_time"]').val();
+		 	next_url = setQueryVariable(next_url,'stime',$('select[name="item_time"]').val());
 		if($('select[name="item_class"]').val())
-		 	sql_search+='&sclass='+$('select[name="item_class"]').val();
+		 	next_url = setQueryVariable(next_url,'sclass',$('select[name="item_class"]').val());
 		if($('select[name="item_location"]').val())
-		 	sql_search+='&slocation='+$('select[name="item_location"]').val();
-		parent.location.href='../index.php?q=drop'+sql_search;
+		 	next_url = setQueryVariable(next_url,'slocation',$('select[name="item_location"]').val());
+		parent.location.href = parent.location.href.split('?')[0]+next_url;
 	});
 	
 });
@@ -83,7 +87,24 @@ function getQueryVariable(variable) {
     }
    	return ""; 
 }
-
+function setQueryVariable(hash, key, value) {
+	var vars = hash.split("&");
+	var found = false;
+	for (var i=0;i<vars.length;i++) {
+		var pair = vars[i].split("=");
+		if(pair[0] == key){
+			if(value!='')
+				vars[i] = key + "=" + value;
+			else
+				vars.splice(i,1);
+			found = true;
+		}
+	}
+	if (! found) { 
+		vars.push(  key + "=" + value ); 
+	}
+	return(vars.join("&"));
+}
 var items_per_page = 10;
 var scroll_in_progress = false;
 var myScroll;
@@ -92,7 +113,10 @@ load_content = function(refresh, next_page) {
 	var stime = getQueryVariable('stime');
 	var sclass = getQueryVariable('sclass');
 	var slocation = getQueryVariable('slocation');
-	
+	var ssort = getQueryVariable('ssort');
+	var slat = getQueryVariable('lat');
+	var slng = getQueryVariable('lng');
+	//console.log(stime,sclass,slocation);
 	// This is a DEMO function which generates DEMO content into the scroller.
 	// Here you should place your AJAX request to fetch the relevant content (e.g. $.post(...))
 
@@ -105,8 +129,12 @@ load_content = function(refresh, next_page) {
 				stime:stime,
 				sclass:sclass,
 				slocation:slocation,
+				ssort:ssort,
+				lat:slat,
+				lng:slng,
 				dataType: 'json',
 				},function(data){
+					//console.log(data);
 					var obj = JSON.parse(data);
 					//have data or no
 					if(obj.error==1){
@@ -119,7 +147,7 @@ load_content = function(refresh, next_page) {
 						$('#wrapper > #scroller > ul').html('');
 						//add top10
 						for(var i=0 ; i<items_per_page && i<list.length; i++)
-							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><span>種類: '+list[i].class+'</span><span>地點: '+list[i].location+' 時間'+list[i].time+'</span></li>');
+							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><div><span>種類: '+list[i].class+'</span><br><span>地點: '+list[i].location+'</span><br><span>時間: '+list[i].time+'</span></div><div><span>'+list[i].distance+'</span></div></li>');
 					}
 					//callback function
 					if (myScroll) {
@@ -130,10 +158,7 @@ load_content = function(refresh, next_page) {
 					trigger_myScroll();
 
 					//jquery show
-					$('#wrapper > #scroller > ul > li').hide();
-					$('#wrapper > #scroller > ul > li').first().show( 200, function showNext() {
-						$( this ).next( "li" ).show( 200, showNext );
-					});
+					//$('#wrapper > #scroller > ul > li').fadeIn();
 				}
 			);
 		} else if (refresh && !next_page) {
@@ -143,6 +168,9 @@ load_content = function(refresh, next_page) {
 				stime:stime,
 				sclass:sclass,
 				slocation:slocation,
+				ssort:ssort,
+				lat:slat,
+				lng:slng,
 				dataType: 'json',
 				},function(data){
 					var obj = JSON.parse(data);
@@ -157,23 +185,23 @@ load_content = function(refresh, next_page) {
 						$('#wrapper > #scroller > ul').html('');
 						//add top10
 						for(var i=0 ; i<items_per_page && i<list.length; i++)
-							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><div><span>種類: '+list[i].class+'</span><span>地點: '+list[i].location+' 時間'+list[i].time+'</span></div><div></div></li>');
+							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><div><span>種類: '+list[i].class+'</span><br><span>地點: '+list[i].location+'</span><br><span>時間: '+list[i].time+'</span></div><div><span>'+list[i].distance+'</span></div></li>');
 					}
 					//callback function
 					myScroll.refresh();
 					pullActionCallback();
 					//jquery show
-					$('#wrapper > #scroller > ul > li').hide();
-					$('#wrapper > #scroller > ul > li').first().show( 100, function showNext() {
-						$( this ).next( "li" ).show( 100, showNext );
-					});
+					//$('#wrapper > #scroller > ul > li').hide();
+					//$('#wrapper > #scroller > ul > li').first().show( 100, function showNext() {
+					//	$( this ).next( "li" ).show( 100, showNext );
+					//});
 				}
 			);
 		} else if (refresh && next_page) {
 			// Loading the next-page content and refreshing
 			//add next 10
 			for(var i=(next_page-1)*items_per_page ; i<next_page*items_per_page && i<list.length; i++)
-				$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><span>種類: '+list[i].class+'</span><span>地點: '+list[i].location+' 時間'+list[i].time+'</span></li>');
+				$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><div><span>種類: '+list[i].class+'</span><br><span>地點: '+list[i].location+'</span><br><span>時間: '+list[i].time+'</span></div><div><span>'+list[i].distance+'</span></div></li>');
 			//callback function
 			myScroll.refresh();
 			pullActionCallback();
@@ -313,11 +341,11 @@ function trigger_myScroll(offset) {
 	}, 1000);
 }
 
-function loaded(id) {
+function loaded() {
 	load_content();
+	document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 }
 
-document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 function view_item(id){
 	location.href='../drop/item.php?id='+id;
 }
@@ -340,8 +368,13 @@ function get_position(){
 		}
 		function successCallback(position) {
 			var geocoder;
+			console.log(position);
 			geocoder = new google.maps.Geocoder();
-			
+			geometry = {
+				lat:position.coords.latitude,
+				lng:position.coords.longitude
+			};
+			console.log(geometry);
 			geocoder.geocode({
 			  'latLng': {lat: position.coords.latitude, lng: position.coords.longitude}
 			}, function(results, status) {
@@ -372,13 +405,74 @@ function get_position(){
 			alert(errorTypes[error.code]);
 		}
 }
+function address_to_geometry(address){
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
+			var result = JSON.parse(xmlHttp.responseText);
+			if(result.status=="OK"){
+				document.getElementById("location").value = result.results[0].formatted_address;
+				var x = document.getElementById('item_location');
+				for(var i=0;i<x.options.length;i++){
+					if(result.results[0].formatted_address.match(x.options[i].text)==x.options[i].text && x.options[i].text != ""){
+						x.options[i].selected = true;
+					}
+				}
+				var temp = {
+					lat:result.results[0].geometry.location.lat.toFixed(6),
+					lng:result.results[0].geometry.location.lng.toFixed(6)
+				};
+				geometry = temp;
+			}
+			else
+				geometry='';
+		}
+    }
+    xmlHttp.open( "GET","https://maps.google.com/maps/api/geocode/json?address="+address+"&sensor=false" ); // false for synchronous request
+    xmlHttp.send();
+}
+function list_position(){
+	if (window.navigator.geolocation==undefined) {
+		alert("此瀏覽器不支援地理定位功能!");
+	}
+	else {
+		var geolocation=window.navigator.geolocation; //取得 Geolocation 物件
+		//地理定位程式碼
+		var option={
+		  enableAcuracy:false,
+		  maximumAge:0,
+		  timeout:600000
+		  };
+		geolocation.getCurrentPosition(successCallback,errorCallback,option);
+		}
+	function successCallback(position) {
+		geometry = {
+			lat:position.coords.latitude.toFixed(6),
+			lng:position.coords.longitude.toFixed(6)
+		};
+		var next_url=parent.location.search;
+		next_url = setQueryVariable(next_url,'ssort','dis');
+		next_url = setQueryVariable(next_url,'lat',geometry.lat);
+		next_url = setQueryVariable(next_url,'lng',geometry.lng);
+		parent.location.href = parent.location.href.split('?')[0]+next_url;
+	}
+	function errorCallback(error) {
+		var errorTypes={
+			0:"不明原因錯誤",
+			1:"使用者拒絕提供位置資訊",
+			2:"無法取得位置資訊",
+			3:"位置查詢逾時"
+			};
+		alert(errorTypes[error.code]);
+	}
+}
 function drop_submit(){
 	var item_class,item_location,location,item_content;
 	item_class = document.getElementById("item_class").value;
 	item_location = document.getElementById("item_location").value;
 	location = document.getElementById("location").value;
 	item_content = document.getElementById("item_content").value;
-	if(item_class!='' || item_location!='' || location!='' || item_content!=''){
+	if(item_class!='' && item_location!='' && location!='' && item_content!=''){
 		$.post("../php/uploaditem.php",
 		{
 			way:'drop',
@@ -386,13 +480,14 @@ function drop_submit(){
 			item_class:item_class,
 			item_location:item_location,
 			location:location,
-			item_content:item_content
+			item_content:item_content,
+			geometry:JSON.stringify(geometry)
 		},
 		function(data){
 			var obj = JSON.parse(data);
 			if(data)
-				alert("發佈成功")
-			location.href('../drop/drop.php');
+				alert("發佈成功");
+			parent.location.href ='../index.php?q=member';
 		});
 	}
 	else{

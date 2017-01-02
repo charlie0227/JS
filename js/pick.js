@@ -1,3 +1,4 @@
+var geometry='';
 $(function(){
 	//prepare search item class
 	$.post('../php/get_item_class.php',{
@@ -28,25 +29,24 @@ $(function(){
 		id:55,
         allowed: ['jpg', 'gif', 'txt', 'png', 'pdf'],
 		maxNumberOfFiles: 3
-        ,onEachUpload:function(file){alert('上傳完成');}
+        ,onEachUpload:function(file){alert('上傳完成');parent.location.href="../index.php?q=drop"}
     });
+	//jquery listen
+	$('#location').on('blur',function(){
+		address_to_geometry($(this).val());
+	});
 });
-function form_submit(){
-	
-}
-
 
 function test() {
-			$.each(ssi-upload.files, function (i, file) {
-                            if (ssi-upload.files.length <= 1) {
-                                return;
-                            }
-							else{
-								alert(ssi-upload.files.length);
-							}
-		});
+	$.each(ssi-upload.files, function (i, file) {
+		if (ssi-upload.files.length <= 1) {
+			return;
+		}
+		else{
+			alert(ssi-upload.files.length);
+		}
+	});
 }
-
 function get_position(){
 	var geocoder;
 	if (window.navigator.geolocation==undefined) {
@@ -67,7 +67,10 @@ function get_position(){
 		}
 		function successCallback(position) {
 			geocoder = new google.maps.Geocoder();
-			
+			geometry = {
+				lat:position.coords.latitude,
+				lng:position.coords.longitude
+			};
 			geocoder.geocode({
 			  'latLng': {lat: position.coords.latitude, lng: position.coords.longitude}
 			}, function(results, status) {
@@ -98,14 +101,39 @@ function get_position(){
 			alert(errorTypes[error.code]);
 		}
 }
-
+function address_to_geometry(address){
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
+			var result = JSON.parse(xmlHttp.responseText);
+			if(result.status=="OK"){
+				document.getElementById("location").value = result.results[0].formatted_address;
+				var x = document.getElementById('item_location');
+				for(var i=0;i<x.options.length;i++){
+					if(result.results[0].formatted_address.match(x.options[i].text)==x.options[i].text && x.options[i].text != ""){
+						x.options[i].selected = true;
+					}
+				}
+				var temp = {
+					lat:result.results[0].geometry.location.lat.toFixed(6),
+					lng:result.results[0].geometry.location.lng.toFixed(6)
+				};
+				geometry = temp;
+			}
+			else
+				geometry='';
+		}
+    }
+    xmlHttp.open( "GET","https://maps.google.com/maps/api/geocode/json?address="+address+"&sensor=false" ); // false for synchronous request
+    xmlHttp.send();
+}
 function pick_submit(){
 	var item_class,item_location,location,item_content;
 	item_class = document.getElementById("item_class").value;
 	item_location = document.getElementById("item_location").value;
 	location = document.getElementById("location").value;
 	item_content = document.getElementById("item_content").value;
-	if(item_class!='' || item_location!='' || location!='' || item_content!=''){
+	if(item_class!='' && item_location!='' && location!='' && item_content!=''){
 		$.post("../php/uploaditem.php",
 		{
 			way:'pick',
@@ -113,7 +141,8 @@ function pick_submit(){
 			item_class:item_class,
 			item_location:item_location,
 			location:location,
-			item_content:item_content
+			item_content:item_content,
+			geometry:JSON.stringify(geometry)
 		},
 		function(data){
 			var obj = JSON.parse(data);

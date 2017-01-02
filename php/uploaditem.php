@@ -1,6 +1,7 @@
 <?php
 require_once "../sysconfig.php";
 $way=$_POST['way'];
+$geometry=$_POST['geometry'];
 $item_class=$_POST['item_class'];
 $item_location=$_POST['item_location'];
 $location=$_POST['location'];
@@ -22,15 +23,15 @@ function find_item_pick_id($db,$item_class,$item_location,$location,$item_conten
 }
 if($way=='pick'){
 	//create new store
-	$sql = "INSERT INTO `jangsc27_cs_js`.`item_drop` (item_class,item_location,location,descript,member_id,time) VALUES(?,?,?,?,?,?)";
+	$sql = "INSERT INTO `jangsc27_cs_js`.`item_drop` (item_class,geometry,item_location,location,descript,member_id,time) VALUES(?,?,?,?,?,?,?)";
 	$sth = $db->prepare($sql);
-	$sth->execute(array($item_class,$item_location,$location,$item_content,$_SESSION['id'],$time));
+	$sth->execute(array($item_class,$geometry,$item_location,$location,$item_content,$_SESSION['id'],$time));
 	$data->item_id=find_item_drop_id($db,$item_class,$item_location,$location,$item_content,$time);
 }
 if($way=='drop'){
-	$sql = "INSERT INTO `jangsc27_cs_js`.`item_pick` (item_class,item_location,location,descript,member_id,time) VALUES(?,?,?,?,?,?)";
+	$sql = "INSERT INTO `jangsc27_cs_js`.`item_pick` (item_class,geometry,item_location,location,descript,member_id,time) VALUES(?,?,?,?,?,?,?)";
 	$sth = $db->prepare($sql);
-	$sth->execute(array($item_class,$item_location,$location,$item_content,$_SESSION['id'],$time));
+	$sth->execute(array($item_class,$geometry,$item_location,$location,$item_content,$_SESSION['id'],$time));
 	$data->item_id=find_item_pick_id($db,$item_class,$item_location,$location,$item_content,$time);
 }
 
