@@ -57,7 +57,7 @@ function get_ip(){
 		<?}
 		else{#if LOGIN => MEMBER MANAGE?>
 			<div id="head" class="style-bg">
-				<h1>HEllo</h1>
+				<h1>SSL加密聊天室</h1>
 			</div>
 			<div id="content">
 				<div class="overlay"></div>
@@ -76,6 +76,9 @@ function get_ip(){
 
 					<ul class="list mat-ripple">
 						<!--phone-->
+						<li id="my_post">
+							<p>我發佈的物品</p>
+						</li>
 						<li id="log_out">
 							<p>Logout</p>
 						</li>

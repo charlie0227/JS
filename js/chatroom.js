@@ -111,7 +111,7 @@ function function_listen(){
         switch (mode) {
             case 'edit':
                 $mod.find('h3').text('Edit Contact');
-				console.log('a',$ctx.text(),'a');
+				//console.log('a',$ctx.text(),'a');
                 $mod.find('#new-user').val($ctx.text()).addClass('used');
                 break;
         }
@@ -142,9 +142,11 @@ function function_listen(){
 	//char send
     $('.mdi-send').on('click', function() {
         var msg = $('.list-chat > div > input').val();
-		$('.list-chat > div > input').val('');
 		//console.log('friendid',friendid);
-		chat_send(friend_id,msg);
+		if(msg!=''){
+			$('.list-chat > div > input').val('');
+			chat_send(friend_id,msg);
+		}
     });
 	//enter button = send
     $('.chat-input').on('keyup', function(event) {
@@ -156,6 +158,8 @@ function function_listen(){
 	//click into chat 
     $('.list-text > ul > li').on('click', function() {
 		//console.log($(this).text());
+		//change title name
+		$("#head").find('h1').html($(this).find('div > span').html());
 		//prepare chat record
 		$('ul.chat').html('');
 		friend_id = $(this).children('input').val();
@@ -179,14 +183,14 @@ function function_listen(){
         $(this).parent().find('.context').remove();
         $(this).addClass('active');
         var $TARGET = $(this);
-		var $sib = $('#chat'+$(this).attr('id').slice(3));
-		console.log($sib.html());
+		
+		//console.log($sib.html());
         if (!$(this).next().hasClass('context')) {
             var $ctx = $('<li class="context"><i class="mdi mdi-pencil"></i><i class="mdi mdi-delete"></i></li>');
 			//edit friend
             $ctx.on('click', '.mdi-pencil', function() {
+				var $sib = $('#chat'+$(this).parent().parent().find('li:first').attr('id').slice(3));
                 setModal('edit', $TARGET.children('span'));
-				
                 $('#contact-modal').one('click', '.btn.save', function() {
 					var new_edit = $('#new-user').val();
 					var target_id = $TARGET.children('input').val();
@@ -208,6 +212,7 @@ function function_listen(){
             });
 			//delete friend
             $ctx.on('click', '.mdi-delete', function() {
+				var $sib = $('#chat'+$(this).parent().parent().find('li:first').attr('id').slice(3));
                 if(confirm('Are you sure delete this Friend ?')){
 					var target_id = $TARGET.children('input').val();
 					//console.log(new_edit,target_id);
@@ -232,6 +237,9 @@ function function_listen(){
 
     // Navigation
     $('.nav li').on('click', function() {
+		//clear title
+		$("#head").find('h1').html('SSL加密聊天室');
+		
         $(this).parent().children().removeClass('active');
         $(this).addClass('active');
         $('.shown').removeClass('shown');

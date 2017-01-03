@@ -1,6 +1,9 @@
 <?php
 require_once "../sysconfig.php";
-$item_id =isset($_GET['id'])?encrypt($_GET['id']):'';
+if(isset($_GET['e']))
+	$item_id =isset($_GET['id'])?$_GET['id']:'';
+else
+	$item_id =isset($_GET['id'])?encrypt($_GET['id']):'';
 ?>
 <html>
 	<head>

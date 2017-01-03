@@ -33,13 +33,13 @@ function write_log($status,$data)  //狀態 資料
     fclose($fileopen); 
 }
 function encrypt( $q ) {
-    $cryptKey  = 'qJB0rGtIn5UB1xG03efyCp';
+    $cryptKey  = 'qJB0rGtIn5UB1xG53efyCp';
     $qEncoded      = base64_encode( mcrypt_encrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), $q, MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ) );
     return( $qEncoded );
 }
 
 function decrypt( $q ) {
-    $cryptKey  = 'qJB0rGtIn5UB1xG03efyCp';
+    $cryptKey  = 'qJB0rGtIn5UB1xG53efyCp';
     $qDecoded      = rtrim( mcrypt_decrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), base64_decode( $q ), MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ), "\0");
     return( $qDecoded );
 }

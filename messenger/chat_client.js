@@ -3,17 +3,15 @@ var myip;
 var friendid;
 var myid;
 function loaded(){
-	console.log('123');
-	socket = new WebSocket('wss://140.113.121.128:9377');
+	//socket = new WebSocket('wss://140.113.121.128:9377');
+	socket = new WebSocket('wss://www.charlie27.me:9377');
 	socket.onopen = function () {
-		console.log('here');
 		var jsonmsg={
 			type:'connect',
 			from_id: document.getElementById("myid").value,
 			ip:document.getElementById("ip").value,
 		};
 		socket.send(JSON.stringify(jsonmsg));
-		console.log('socket.send');
 	};
 
 	socket.onmessage = function (message) {

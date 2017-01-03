@@ -10,7 +10,10 @@ $(function(){
 	});
 	
 	if(getQueryVariable('q')=='drop'){
-		 frames[0].location.href='drop/drop.html';
+		if(getQueryVariable('s')!='')
+			frames[0].location.href='drop/item.php?e=e&id='+getQueryVariable('s');
+		else
+			frames[0].location.href='drop/drop.html';
 		$('#drop').addClass("select_header");
 		$("#member > img").attr("src","image/ic_account_box_white_48dp_1x.png");
 	}
