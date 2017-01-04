@@ -11,7 +11,7 @@ $(function(){
 	
 	if(getQueryVariable('q')=='drop'){
 		if(getQueryVariable('s')!='')
-			frames[0].location.href='drop/item.php?e=e&id='+getQueryVariable('s');
+			frames[0].location.href='drop/item.php?e=e&id='+encodeURIComponent(getQueryVariable('s'));
 		else
 			frames[0].location.href='drop/drop.html';
 		$('#drop').addClass("select_header");
@@ -23,7 +23,10 @@ $(function(){
 		$("#member > img").attr("src","image/ic_account_box_white_48dp_1x.png");
 	}
 	else if(getQueryVariable('q')=='member'){
-		 frames[0].location.href='member/member.php';
+			if(getQueryVariable('s')!='')
+				frames[0].location.href='member/member.php?s='+getQueryVariable('s');
+		else
+		 	frames[0].location.href='member/member.php';
  		$('#member').addClass("select_header");
 		$("#member > img").attr("src","image/ic_account_box_black_48dp_1x.png");
 	}

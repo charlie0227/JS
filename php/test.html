@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/classie.js"></script>
+		<script src="../js/jquery-ui.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/polymer/0.3.4/platform.js"></script>
+	</head>
+	<body <body onload="send();">>
+
+	</body>
+  <script>
+    function send(){
+      $.post('get_item_droppick.php',{
+        dataType:'json'
+      },function(data){
+        var obj = JSON.parse(data);
+        //console.log(obj.list.length);
+        for(var i=0;i<obj.list.length;i++){
+          console.log(obj.list[i].type);
+          var geo = JSON.parse(obj.list[i].geometry); // geo.lat | geo.lng
+          console.log(geo.lat + " , " +geo.lng);
+        }
+
+
+      });
+    }
+  </script>
+</html>

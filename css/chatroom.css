@@ -319,26 +319,29 @@ canvas {
   width: 400px;
   display: block;
 }
-.list-phone,
+.list-setting,
 .list-text,
 .list-account,
-.list-chat {
+.list-chat,
+.list-post{
   display: none;
   height: 100%;
 }
-.list-phone.shown,
+.list-setting.shown,
 .list-text.shown,
 .list-account.shown,
-.list-chat.shown {
+.list-chat.shown, 
+.list-post.shown {
   display: block;
   animation: fade 0.444s 1 ease-out;
   animation-fill-mode: alternate;
   overflow-y: scroll;
 }
-.list-phone .meta-bar,
+.list-setting .meta-bar,
 .list-text .meta-bar,
 .list-account .meta-bar,
-.list-chat .meta-bar {
+.list-chat .meta-bar,
+.list-post .meta-bar {
   border-bottom: 1px solid #7daefe;
   padding: 0 0 0 25px;
   height: 40px;
@@ -346,10 +349,11 @@ canvas {
   width: 100%;
   background-color: white;
 }
-.list-phone .meta-bar.chat,
+.list-setting .meta-bar.chat,
 .list-text .meta-bar.chat,
 .list-account .meta-bar.chat,
-.list-chat .meta-bar.chat {
+.list-chat .meta-bar.chat,
+.list-post .meta-bar.chat {
   border-top: 1px solid lightgrey;
   background: white;
   border-bottom: none;
@@ -358,6 +362,7 @@ canvas {
 }
 .list-chat.shown {
   animation: fade-up 0.444s 1 ease-out;
+  height: 414px;
 }
 ul.chat {
   width: 100%;
@@ -412,7 +417,6 @@ ul.chat li.me_msg .message:after {
 }
 ul.list {
   width: 100%;
-  padding-bottom: 130px;
 }
 ul.list li {
   cursor: pointer;
@@ -470,7 +474,7 @@ ul.list li .content-container .name {
   padding: 0 0 0 20px;
   font-size: 1em;
 }
-ul.list li .content-container .phone {
+ul.list li .content-container .setting {
   padding: 0 0 0 20px;
   font-size: 0.8em;
   display: block;
@@ -606,4 +610,204 @@ input:focus ~ .bar:after {
 }
 body {
   font-family: 'Roboto';
+}
+.post_drop{
+	-moz-box-shadow:inset 0px 1px 0px 0px #a4e271;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #a4e271;
+	box-shadow:inset 0px 1px 0px 0px #a4e271;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #89c403), color-stop(1, #77a809));
+	background:-moz-linear-gradient(top, #89c403 5%, #77a809 100%);
+	background:-webkit-linear-gradient(top, #89c403 5%, #77a809 100%);
+	background:-o-linear-gradient(top, #89c403 5%, #77a809 100%);
+	background:-ms-linear-gradient(top, #89c403 5%, #77a809 100%);
+	background:linear-gradient(to bottom, #89c403 5%, #77a809 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#89c403', endColorstr='#77a809',GradientType=0);
+	background-color:#89c403;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #74b807;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #528009;
+}
+.post_pick{
+	-moz-box-shadow:inset 0px 1px 0px 0px #f29c93;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #f29c93;
+	box-shadow:inset 0px 1px 0px 0px #f29c93;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fe1a00), color-stop(1, #ce0100));
+	background:-moz-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+	background:-webkit-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+	background:-o-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+	background:-ms-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+	background:linear-gradient(to bottom, #fe1a00 5%, #ce0100 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fe1a00', endColorstr='#ce0100',GradientType=0);
+	background-color:#fe1a00;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #d83526;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #b23e35;
+}
+.list-post p{
+    line-height: 33px;
+    margin: 0px 25px;
+}
+.list-post p:hover{
+	color:blue;
+	background:#cefbff;
+}
+
+.delete_icon{
+	margin-right:0;
+	margin-left:auto;
+    border-radius: 5px;
+    background: #cf5144;
+    width: 36px;
+    height: 36px;
+    padding: 5px;
+}
+.delete_icon:hover{
+    background: #a2c0f2;
+}
+.delete_icon img{
+	width: 26px !important;
+    height: 26px !important;
+}
+@media screen and (max-device-width: 480px) {
+	#head{
+		height: 120px;
+		font-size: 300%;
+	}
+	#head h1{
+	    padding: 10px;
+	}
+	ul.nav {
+    	height: 120px;
+	}
+	ul.nav li {
+		height: 120px;
+	}
+	.mdi{
+	    font-size: 90px;
+	}
+	.mdi-pencil, .mdi-delete{
+		font-size: 70px !important;
+	}
+	#content{	
+	    margin-top: 120px;
+		height:76%;
+	}
+	.meta-bar{
+		height: 90px !important;
+		padding: 12px 40px !important;
+	}
+	input.nostyle {
+		font-size:250%;
+	}
+	ul.list li {
+		height: 170px;
+		padding:5px;
+	}
+	ul.list li img{
+		height: 100px;
+		margin: auto 0;
+		width: 100px;
+	}
+	ul.list li .name{
+		font-size: 35px !important;
+    	line-height: 145px;
+	}
+	ul.list li.context {
+    	height: 100px;
+	}
+	.card.dialog {
+		width: 700px;
+		height: 370px;
+		font-size: 420%;
+	}
+	.i-group input{
+    	font-size: 38px;
+	}
+	.meta-bar.chat{
+	    bottom: 122px !important;
+		height:110px !important;
+	}
+	.chat-input{
+    	vertical-align: text-bottom;
+		width:88% !important;
+	}
+	.list-chat.shown {
+		height:90%;
+	}
+	ul.list-chat.shown{
+		position: absolute;
+		padding: 20px;
+	}
+	ul.chat li {
+		height:120px;
+	}
+	ul.chat li img {
+		height:80px;
+		width:80px;
+	}
+	ul.chat li .message {
+		font-size:40px;
+	}
+	.txt{	
+		font-size: 36px !important;
+		position: absolute;
+		top: 100px;
+		left: 150px;
+	}
+	.unseen{
+		font-size: 36px !important;
+		position: absolute;
+		top: 100px;
+		left: 100px;
+	}
+	.time{
+		font-size:30px !important;
+		position: absolute;
+		top: 90px;
+		right: 45px;
+	}
+	.list-setting ul li p{
+	    font-size: 46px;
+ 	    padding: 40px;
+	}
+	.post_drop, .post_pick{
+		width: 200px;
+		height: 90px;
+		font-size: 49px;
+		margin: auto 0 auto 20px;
+	}
+	.list-post p{
+		line-height: 160px;
+		font-size: 31px;
+	}
+	.delete_icon{
+		height: 90px;
+		width: 90px;
+		margin: auto 20px auto auto;
+    	padding: 15px;
+	}
+	.delete_icon img{
+		width: 60px !important;
+    	height: 60px !important;
+	}
 }

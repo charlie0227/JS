@@ -43,15 +43,8 @@ $(function(){
 	});
 });
 
-function test() {
-	$.each(ssi-upload.files, function (i, file) {
-		if (ssi-upload.files.length <= 1) {
-			return;
-		}
-		else{
-			alert(ssi-upload.files.length);
-		}
-	});
+function img_num() {
+	return $('#ssi-previewBox table').length;
 }
 function get_position(){
 	var geocoder;
@@ -134,6 +127,7 @@ function address_to_geometry(address){
     xmlHttp.send();
 }
 function pick_submit(){
+			test();
 	var item_class,item_location,location,item_content;
 	item_class = document.getElementById("item_class").value;
 	item_location = document.getElementById("item_location").value;
@@ -154,7 +148,10 @@ function pick_submit(){
 			var obj = JSON.parse(data);
 			var x = document.getElementById('item_id');
 			x.value = obj.item_id;
-			$("#ssi-uploadBtn").click();
+			if(img_num>0)
+				$("#ssi-uploadBtn").click();
+			else
+				parent.location.href="../index.php?q=drop";
 		});
 	}
 	else{

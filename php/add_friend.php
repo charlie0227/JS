@@ -22,6 +22,7 @@ if($drop_id!=''){
 	$sql = "INSERT INTO `friend` (my_id,friend_id,friend_name,last_chat,num_unseen_chat) VALUES (?,?,?,'','0'), (?,?,?,'','0')";
 	$sth = $db->prepare($sql);
 	$sth->execute(array($_SESSION['id'],$friend_id,$friend_id.$friend_name,$friend_id,$_SESSION['id'],$_SESSION['id'].$friend_name));
-	print_r($friend_name);
+	$data->friend_name=$friend_id.$friend_name;
 }
+echo json_encode($data);
 ?>

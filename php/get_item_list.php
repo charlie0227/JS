@@ -39,6 +39,7 @@ if($way=="drop_item_list"){
 			else{
 				$result[$i]['distance']='';
 			}
+			$result[$i]['id'] = encrypt($result[$i]['id']);
 		}
 		//sort distance 
 		if($ssort='dis'){

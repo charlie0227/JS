@@ -8,6 +8,7 @@ $(function(){
 			},
 		});
 	});
+	
 	$.post('../php/chat_friend.php',{
 		way:'friend_list',
 		dataType:'json',
@@ -53,18 +54,54 @@ $(function(){
 		}
 	);
 });
-
+//parse GET url
+function getQueryVariable(variable) {
+    var query = location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+   	return ""; 
+}
 function function_listen(){
 	var friend_id;
 	// First route to show
     var GLOBALSTATE = {
         route: '.list-account'
     };
-
+	
+		
     // Set first Route
     setRoute(GLOBALSTATE.route);
     $('.nav > li[data-route="' + GLOBALSTATE.route + '"]').addClass('active');
-
+	
+	//when add new friend opening
+	if(getQueryVariable('s')!=''){
+		var f_name = getQueryVariable('s');
+		var $target_li = $('.list-text span:contains('+f_name+')').parent().find('li');
+		var $target_nav = $('.nav > li[data-route=".list-text"]');
+		//nav to list-text
+		$target_nav.parent().children().removeClass('active');
+        $target_nav.addClass('active');
+		setRoute('.list-text');
+		//change title name
+		$("#head").find('h1').html(f_name);
+		//prepare chat record
+		$('ul.chat').html('');
+		var friend_id = $target_li.children('input').val();
+		// timeout just for eyecandy...
+        setTimeout(function() {
+            $('.shown').removeClass('shown');
+            $('.list-chat').addClass('shown');
+			prepare_chat_record(friend_id);
+        	$target_li.find('.unseen').text('');
+            setRoute('.list-chat');
+            $('.chat-input').focus();
+        }, 300);
+	}
     // Have to Delegate ripple due to dom manipulation (add)
     $('ul.mat-ripple').on('click', 'li', function(event) {
         if ($(this).parent().hasClass('tiny')) {
@@ -110,7 +147,7 @@ function function_listen(){
         var $mod = $('#contact-modal');
         switch (mode) {
             case 'edit':
-                $mod.find('h3').text('Edit Contact');
+                $mod.find('h3').text('Edit Name');
 				//console.log('a',$ctx.text(),'a');
                 $mod.find('#new-user').val($ctx.text()).addClass('used');
                 break;
@@ -120,12 +157,6 @@ function function_listen(){
         $('.overlay').addClass('add');
         $mod.find('#new-user').focus();
     }
-
-    $('.mdi-arrow-left').on('click', function() {
-        $('.shown').removeClass('shown');
-        setRoute('.list-text');
-    });
-
     // Set Routes - set floater
     function setRoute(route) {
         GLOBALSTATE.route = route;
@@ -135,10 +166,52 @@ function function_listen(){
         } else {
             $('#content').removeClass('chat');
         }
-    }
+		if(route==='.list-text')
+			$("#head").find('h1').html('訊息');
+		if(route==='.list-account')
+			$("#head").find('h1').html('好友');
+		if(route==='.list-setting')
+			$("#head").find('h1').html('設定');
+			
+	}
 
 
-
+	//click into my post
+	$('#my_post').on('click',function(){
+		$('.shown').removeClass('shown');
+		$.post('../php/get_item_post.php',{
+			datatype:'json'
+		},function(data){
+			var obj = JSON.parse(data);
+			//console.log(obj.list.length);
+			for(var i=0;i<obj.result.length;i++){
+				var url = 'https://www.charlie27.me/~test123/index.php?q=drop&s='+obj.result[i].id;
+				var post_name = obj.result[i].location+' '+obj.result[i].class+' '+obj.result[i].time;
+			    if(obj.result[i].type=='drop')
+				  $('.list-post > ul').append('<li><input type="button" value="撿到" class="post_drop"><p onclick="parent.location.href='+"'"+url+"'"+'">'+post_name+'</p><div class="delete_icon"><img src="../image/garbage.png"></div><input type="hidden" name="drop" value="'+obj.result[i].id+'"></li>')
+			    if(obj.result[i].type=='pick')
+				  $('.list-post > ul').append('<li><input type="button" value="遺失" class="post_pick"><p>'+post_name+'</p><div class="delete_icon"><img src="../image/garbage.png"></div><input type="hidden" name="pick" value="'+obj.result[i].id+'"></li>')
+			}
+		});
+		setRoute('.list-post');
+	});
+	//post delete
+    $('.list-post > .list').on('click', 'li', function(e) {
+		var target = $(e.target);
+		if(target.parent().attr('class')=='delete_icon')
+			target = target.parent();
+		if(target.attr('class')=='delete_icon'){
+			var type = $(this).parent().find('input[type="hidden"]').attr('name');
+			var item_id = $(this).parent().find('input[type="hidden"]').attr('value');
+			$.post('../php/delete_post.php',{
+				way:type,
+				item_id:item_id
+			},function(data){
+				if(data=='OK')
+					target.parent().remove();
+			});
+		}
+	});
 	//char send
     $('.mdi-send').on('click', function() {
         var msg = $('.list-chat > div > input').val();
@@ -237,8 +310,6 @@ function function_listen(){
 
     // Navigation
     $('.nav li').on('click', function() {
-		//clear title
-		$("#head").find('h1').html('SSL加密聊天室');
 		
         $(this).parent().children().removeClass('active');
         $(this).addClass('active');
@@ -266,18 +337,4 @@ function function_listen(){
         closeModal();
     });
 
-    $('#new-user').on('keydown', function(event) {
-        switch (event.which) {
-            case 13:
-                event.preventDefault();
-                $('.btn.save').trigger('click');
-                break;
-
-            case 27:
-                event.preventDefault();
-                $('.btn.cancel').trigger('click');
-                break;
-        }
-
-    });
 }

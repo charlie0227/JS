@@ -55,17 +55,10 @@ var socket = new server({
 //console.log("Server listening on port*"+port);
 
 var connections = new Array();
-socket.on('connection', function (wsConnect) {
-  console.log('connection');
-    wsConnect.on('message', function (message) {
-      console.log(message);
-    });
-  });
 socket.on('request', function(request) {
     var connection = request.accept(null, request.origin);
-    console.log("client connection accepted");
-	connection.addListener('message',function(msg){
-		console.log(msg.utf8Data);
+    connection.addListener('message',function(msg){
+		//console.log(msg.utf8Data);
 		var o = JSON.parse(msg.utf8Data);
 		var d = new Date();
         var date = '['+d.getFullYear()+'-'

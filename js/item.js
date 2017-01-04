@@ -1,7 +1,8 @@
 function load(drop_id){
+	//console.log(drop_id);
 	$.post('../php/get_item_list.php',{
 		way:'drop_item',
-		drop_id:drop_id
+		drop_id:encodeURIComponent(drop_id)
 		},function(data){
 			//console.log(data);
 			var obj=JSON.parse(data);
@@ -20,9 +21,12 @@ function load(drop_id){
 }
 function add_friend(drop_id){
 	$.post('../php/add_friend.php',{
-		drop_id:drop_id
+		drop_id:encodeURIComponent(drop_id)
 		},function(data){
-			parent.location.href='../index.php?q=member';
+			//console.log(data);
+			var obj = JSON.parse(data);
+			//console.log(encodeURIComponent(obj.friend_name));	
+			parent.location.href='../index.php?q=member&s='+encodeURIComponent(obj.friend_name);
 		}
 	);
 }

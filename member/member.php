@@ -57,7 +57,7 @@ function get_ip(){
 		<?}
 		else{#if LOGIN => MEMBER MANAGE?>
 			<div id="head" class="style-bg">
-				<h1>SSL加密聊天室</h1>
+				<h1></h1>
 			</div>
 			<div id="content">
 				<div class="overlay"></div>
@@ -72,16 +72,19 @@ function get_ip(){
 						<!--chat view-->
 					</ul>
 				</div>
-				<div class="list-phone">
-
+				<div class="list-setting">
 					<ul class="list mat-ripple">
-						<!--phone-->
+						<!--setting-->
 						<li id="my_post">
 							<p>我發佈的物品</p>
 						</li>
 						<li id="log_out">
 							<p>Logout</p>
 						</li>
+					</ul>
+				</div>
+				<div class="list-post">
+					<ul class="list mat-ripple">
 					</ul>
 				</div>
 				<div class="list-chat">
@@ -100,17 +103,16 @@ function get_ip(){
 					<li data-route=".list-text">
 						<i class="mdi mdi-comment-text"></i>
 					</li>
-					<li data-route=".list-phone">
+					<li data-route=".list-setting">
 						<i class="mdi mdi-settings"></i>
 					</li>
 				</ul>
 			</div>
 			<div id="contact-modal" data-mode="add" class="card dialog">
-				<h3>Add Contact</h3>
+				<h3>Edit Name</h3>
 				<div class="i-group">
 					<input type="text" id="new-user">
 					<span class="bar"></span>
-					<label>Name</label>
 				</div>
 				<div class="btn-container">
 					<span class="btn cancel">Cancel</span>

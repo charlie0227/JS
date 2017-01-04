@@ -79,7 +79,7 @@ function loaded(){
 		console.log('WebSocket error: ' + error);
 	};
 	 socket.onclose = function (event) {
-		setTimeout(loaded, 5000);
+		setTimeout(loaded, 10000);
 	};
 }
 function prepare_chat_record(friend_id){

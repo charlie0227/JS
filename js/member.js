@@ -35,7 +35,7 @@ $(function(){
 //main function click
 $(function(){
 	$('#sign_up').on('click',function(){
-		location.href='../register.html';
+		location.href='../member/register.html';
 	});
 	$('#sign_in').on('click',function(){
 		$.post('../php/login.php',{
@@ -65,13 +65,13 @@ $(function(){
 				dataType:'text',
 				},function(data){
 					alert(data);
-					location.href = 'member.php';
+					location.href = '../member/member.php';
 				}
 			);
 		}
 	});
 	$('#back').on('click',function(){
-		location.href='member.php';
+		location.href='../member/member.php';
 	});
 });
 //press Enter to next
@@ -94,7 +94,7 @@ function validateEmail(email) {
 	return re.test(email);
 }
 function repeatEmail(email){
-	$.post('php/login.php',{
+	$.post('../php/login.php',{
 		way:'check_email',
 		email: document.getElementById('email').value,
 		dataType:'json',

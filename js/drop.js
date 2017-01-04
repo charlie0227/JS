@@ -147,7 +147,7 @@ load_content = function(refresh, next_page) {
 						$('#wrapper > #scroller > ul').html('');
 						//add top10
 						for(var i=0 ; i<items_per_page && i<list.length; i++)
-							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><div><span>種類: '+list[i].class+'</span><br><span>地點: '+list[i].location+'</span><br><span>時間: '+list[i].time+'</span></div><div><span>'+list[i].distance+'</span></div></li>');
+							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+"'"+list[i].id+"'"+')"><div><span>種類: '+list[i].class+'</span><br><span>地點: '+list[i].location+'</span><br><span>時間: '+list[i].time+'</span></div><div><span>'+list[i].distance+'</span></div></li>');
 					}
 					//callback function
 					if (myScroll) {
@@ -185,7 +185,7 @@ load_content = function(refresh, next_page) {
 						$('#wrapper > #scroller > ul').html('');
 						//add top10
 						for(var i=0 ; i<items_per_page && i<list.length; i++)
-							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><div><span>種類: '+list[i].class+'</span><br><span>地點: '+list[i].location+'</span><br><span>時間: '+list[i].time+'</span></div><div><span>'+list[i].distance+'</span></div></li>');
+							$('#wrapper > #scroller > ul').append('<li onclick="view_item('+"'"+list[i].id+"'"+')"><div><span>種類: '+list[i].class+'</span><br><span>地點: '+list[i].location+'</span><br><span>時間: '+list[i].time+'</span></div><div><span>'+list[i].distance+'</span></div></li>');
 					}
 					//callback function
 					myScroll.refresh();
@@ -201,7 +201,7 @@ load_content = function(refresh, next_page) {
 			// Loading the next-page content and refreshing
 			//add next 10
 			for(var i=(next_page-1)*items_per_page ; i<next_page*items_per_page && i<list.length; i++)
-				$('#wrapper > #scroller > ul').append('<li onclick="view_item('+list[i].id+')"><div><span>種類: '+list[i].class+'</span><br><span>地點: '+list[i].location+'</span><br><span>時間: '+list[i].time+'</span></div><div><span>'+list[i].distance+'</span></div></li>');
+				$('#wrapper > #scroller > ul').append('<li onclick="view_item('+"'"+list[i].id+"'"+')"><div><span>種類: '+list[i].class+'</span><br><span>地點: '+list[i].location+'</span><br><span>時間: '+list[i].time+'</span></div><div><span>'+list[i].distance+'</span></div></li>');
 			//callback function
 			myScroll.refresh();
 			pullActionCallback();
