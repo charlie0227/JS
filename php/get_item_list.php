@@ -41,8 +41,8 @@ if($way=="drop_item_list"){
 			}
 			$result[$i]['id'] = encrypt($result[$i]['id']);
 		}
-		//sort distance 
-		if($ssort='dis'){
+		//sort by distance 
+		if($ssort=='dis'){
 			usort($result,function($x,$y){
 				//descending
 				if($x['distance']=='' && $x['distance']!=0)
@@ -90,6 +90,10 @@ if($way=="drop_item"){
 	$sth = $db->prepare($sql);
 	$sth->execute(array($drop_id));
 	$result=$sth->fetchObject();
+	$result->id=encrypt($result->id);
+	//0 for no login, 1 for you are owner, 2 for normal
+	$data->display = !isset($_SESSION['id'])?0:
+					($result->member_id==$_SESSION['id'])?2:1;
 	$data->result=$result;
 	//fetch img
 	$sql = "SELECT * FROM `item_drop_img` WHERE `item_id` = ?";
@@ -99,7 +103,8 @@ if($way=="drop_item"){
 		$data->img_url=$result_img;
 	else
 		$data->img_url='';
-	
+	//fetch 3 similiar
+	/*
 	$sql = "SELECT *,a.id as id,b.thing as item_class,c.location as item_location, a.location as location
 	FROM `item_drop` a 
 	JOIN `item_class` b
@@ -115,6 +120,7 @@ if($way=="drop_item"){
 	$data->possible=$result;
 	$data->message="OK";
 	$data->error=0;
+	*/
 }
 echo json_encode($data);
 

@@ -1,6 +1,6 @@
 var geometry='';
 $(function(){
-	
+
 	$('#search_bar').hide();
 	//prepare search item class
 	$.post('../php/get_item_class.php',{
@@ -24,7 +24,7 @@ $(function(){
 				$('select[name="item_location"]').append('<option value="'+list[i].id+'">'+list[i].location+'</option>');
 		}
 	);
-	
+
 	//icon click function
 	$("#search").on('click',function(){
 		$("#search_bar").fadeIn('slow');
@@ -47,7 +47,7 @@ $(function(){
 			$(this).val('依時間排序');
 			/*sort by distance*/
 			list_position();
-			
+
 		}
 		else{
 			$(this).val('依距離排序');
@@ -56,6 +56,7 @@ $(function(){
 			next_url = setQueryVariable(next_url,'ssort','time');
 			location.href = location.href.split('?')[0]+next_url;
 		}
+		console.log(location.href);
 	});
 	//jquery listen
 	$('#location').on('blur',function(){
@@ -73,7 +74,7 @@ $(function(){
 		 	next_url = setQueryVariable(next_url,'slocation',$('select[name="item_location"]').val());
 		location.href = location.href.split('?')[0]+next_url;
 	});
-	
+
 });
 //parse GET url
 function getQueryVariable(variable) {
@@ -85,7 +86,7 @@ function getQueryVariable(variable) {
             return decodeURIComponent(pair[1]);
         }
     }
-   	return ""; 
+   	return "";
 }
 function setQueryVariable(hash, key, value) {
 	var vars = hash.split("&");
@@ -100,8 +101,8 @@ function setQueryVariable(hash, key, value) {
 			found = true;
 		}
 	}
-	if (! found) { 
-		vars.push(  key + "=" + value ); 
+	if (! found) {
+		vars.push(  key + "=" + value );
 	}
 	return(vars.join("&"));
 }
@@ -120,7 +121,7 @@ load_content = function(refresh, next_page) {
 	// This is a DEMO function which generates DEMO content into the scroller.
 	// Here you should place your AJAX request to fetch the relevant content (e.g. $.post(...))
 
-	//console.log(refresh, next_page);
+	console.log(refresh, next_page);
 	setTimeout(function() { // This immitates the CALLBACK of your AJAX function
 		if (!refresh) {
 			// Loading the initial content
@@ -273,7 +274,7 @@ function trigger_myScroll(offset) {
 	} else {
 		pullDownOffset = 0;
 	}
-	pullUpEl = document.querySelector('#wrapper .pullUp');	
+	pullUpEl = document.querySelector('#wrapper .pullUp');
 	if (pullUpEl) {
 		pullUpOffset = pullUpEl.offsetHeight;
 	} else {
@@ -314,13 +315,13 @@ function trigger_myScroll(offset) {
 				this.minScrollY = -pullDownOffset;
 			}
 
-			//console.log(this.y);
+			console.log(this.y);
 			pullActionDetect.check(0);
 
 		}
 	});
 	myScroll.on('scrollEnd', function () {
-		//console.log('scroll ended');
+		console.log('scroll ended');
 		setTimeout(function() {
 			scroll_in_progress = false;
 		}, 100);
@@ -343,7 +344,7 @@ function trigger_myScroll(offset) {
 
 function loaded() {
 	load_content();
-	document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+	//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 }
 
 function view_item(id){
@@ -394,7 +395,7 @@ function get_position(){
 				}
 			});
 		}
-		
+
 		function errorCallback(error) {
 			var errorTypes={
 				0:"不明原因錯誤",
@@ -407,7 +408,7 @@ function get_position(){
 }
 function address_to_geometry(address){
 	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.onreadystatechange = function() { 
+	xmlHttp.onreadystatechange = function() {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
 			var result = JSON.parse(xmlHttp.responseText);
 			if(result.status=="OK"){
@@ -466,12 +467,29 @@ function list_position(){
 		alert(errorTypes[error.code]);
 	}
 }
+var entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+};
+
+function escapeHtml (string) {
+	return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap (s) {
+		return entityMap[s];
+	});
+}
+
 function drop_submit(){
 	var item_class,item_location,location,item_content;
-	item_class = document.getElementById("item_class").value;
-	item_location = document.getElementById("item_location").value;
-	location = document.getElementById("location").value;
-	item_content = document.getElementById("item_content").value;
+	item_class = escapeHtml(document.getElementById("item_class").value);
+	item_location = escapeHtml(document.getElementById("item_location").value);
+	location = escapeHtml(document.getElementById("location").value);
+	item_content = escapeHtml(document.getElementById("item_content").value);
 	if(item_class!='' && item_location!='' && location!='' && item_content!=''){
 		$.post("../php/uploaditem.php",
 		{
@@ -487,12 +505,12 @@ function drop_submit(){
 			var obj = JSON.parse(data);
 			if(data)
 				alert("發佈成功");
-			location.href ='../index.php?q=member';
+			parent.location.href ='../index.php?q=member&t=setting';
 		});
 	}
 	else{
 		alert('請填入物品詳細資料')
 	}
-		
-		
+
+
 }

@@ -30,10 +30,10 @@ $(function(){
         allowed: ['jpg', 'gif', 'txt', 'png', 'pdf'],
 		maxNumberOfFiles: 3,
 		onEachUpload:function(file){
-			//alert('上傳完成'); 
+			//alert('上傳完成');
 		},
 		onUpload:function(file){
-			alert('上傳完成'); 
+			alert('上傳完成');
 			parent.location.href="../index.php?q=drop";
 		}
     });
@@ -89,7 +89,7 @@ function get_position(){
 				}
 			});
 		}
-		
+
 		function errorCallback(error) {
 			var errorTypes={
 				0:"不明原因錯誤",
@@ -102,7 +102,7 @@ function get_position(){
 }
 function address_to_geometry(address){
 	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.onreadystatechange = function() { 
+	xmlHttp.onreadystatechange = function() {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
 			var result = JSON.parse(xmlHttp.responseText);
 			if(result.status=="OK"){
@@ -126,13 +126,30 @@ function address_to_geometry(address){
     xmlHttp.open( "GET","https://maps.google.com/maps/api/geocode/json?address="+address+"&sensor=false" ); // false for synchronous request
     xmlHttp.send();
 }
+var entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+};
+
+function escapeHtml (string) {
+	return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap (s) {
+		return entityMap[s];
+	});
+}
+
 function pick_submit(){
-			test();
+	//test();
 	var item_class,item_location,location,item_content;
-	item_class = document.getElementById("item_class").value;
-	item_location = document.getElementById("item_location").value;
-	location = document.getElementById("location").value;
-	item_content = document.getElementById("item_content").value;
+	item_class = escapeHtml(document.getElementById("item_class").value);
+	item_location = escapeHtml(document.getElementById("item_location").value);
+	location = escapeHtml(document.getElementById("location").value);
+	item_content = escapeHtml(document.getElementById("item_content").value);
 	if(item_class!='' && item_location!='' && location!='' && item_content!=''){
 		$.post("../php/uploaditem.php",
 		{
@@ -148,7 +165,7 @@ function pick_submit(){
 			var obj = JSON.parse(data);
 			var x = document.getElementById('item_id');
 			x.value = obj.item_id;
-			if(img_num>0)
+			if(img_num()>0)
 				$("#ssi-uploadBtn").click();
 			else
 				parent.location.href="../index.php?q=drop";

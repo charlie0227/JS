@@ -32,6 +32,23 @@ $(function(){
 		}
 	}
 });
+
+var entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+};
+
+function escapeHtml (string) {
+	return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap (s) {
+		return entityMap[s];
+	});
+}
 //main function click
 $(function(){
 	$('#sign_up').on('click',function(){
@@ -40,8 +57,8 @@ $(function(){
 	$('#sign_in').on('click',function(){
 		$.post('../php/login.php',{
 			way:'login',
-			email: document.getElementById('email').value,
-			password: document.getElementById('password').value,
+			email: escapeHtml(document.getElementById('email').value),
+			password: escapeHtml(document.getElementById('password').value),
 			dataType: 'json',
 			},function(data){
 				var obj = JSON.parse(data);
@@ -54,14 +71,14 @@ $(function(){
 				}
 			}
 		);
-	});	 
-	
+	});
+
 	$('#send').on('click',function(){
 		if(validate()){
 			$.post('../php/register.php',{
-				email: document.getElementById('email').value,
-				password: document.getElementById('password').value,
-				phone: document.getElementById('phone').value,
+				email: escapeHtml(document.getElementById('email').value),
+				password: escapeHtml(document.getElementById('password').value),
+				phone: escapeHtml(document.getElementById('phone').value),
 				dataType:'text',
 				},function(data){
 					alert(data);

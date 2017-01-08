@@ -330,7 +330,7 @@ canvas {
 .list-setting.shown,
 .list-text.shown,
 .list-account.shown,
-.list-chat.shown, 
+.list-chat.shown,
 .list-post.shown {
   display: block;
   animation: fade 0.444s 1 ease-out;
@@ -362,7 +362,6 @@ canvas {
 }
 .list-chat.shown {
   animation: fade-up 0.444s 1 ease-out;
-  height: 414px;
 }
 ul.chat {
   width: 100%;
@@ -708,7 +707,7 @@ body {
 	.mdi-pencil, .mdi-delete{
 		font-size: 70px !important;
 	}
-	#content{	
+	#content{
 	    margin-top: 120px;
 		height:76%;
 	}
@@ -768,7 +767,7 @@ body {
 	ul.chat li .message {
 		font-size:40px;
 	}
-	.txt{	
+	.txt{
 		font-size: 36px !important;
 		position: absolute;
 		top: 100px;

@@ -150,7 +150,7 @@ a {
 	resize: none;
   	outline: none;
 }
-.pick_bar > input.button{
+.pick_bar  input.button{
     margin: 20px;
     font-size: 28px;
     font-weight: bold;

@@ -24,12 +24,7 @@ $item_id =isset($_GET['id'])?$_GET['id']:'';
 				<p>物品描述</p>
 				<span id="descript"></span>
 				<br><br>
-				<?if(isset($_SESSION['id'])){?>
-				<input class="button" type="button" value="連絡拾獲人" onclick="add_friend('<?echo $item_id?>');">
-				<?}else{?>
-				<input class="button" type="button" value="連絡拾獲人" onclick="alert('請先登入確定身分');parent.location.href='../index.php?q=member';">	
-				<?}?>
-				<input class="button" type="button" value="返回物品列表" onclick="location.href='../drop/drop.html'">
+				<span id="display"></span>
 				<div class="other_possible">
 				</div>
 				<br><br>

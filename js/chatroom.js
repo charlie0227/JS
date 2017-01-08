@@ -8,7 +8,7 @@ $(function(){
 			},
 		});
 	});
-	
+
 	$.post('../php/chat_friend.php',{
 		way:'friend_list',
 		dataType:'json',
@@ -53,6 +53,8 @@ $(function(){
 		function_listen();
 		}
 	);
+
+
 });
 //parse GET url
 function getQueryVariable(variable) {
@@ -64,7 +66,7 @@ function getQueryVariable(variable) {
             return decodeURIComponent(pair[1]);
         }
     }
-   	return ""; 
+   	return "";
 }
 function function_listen(){
 	var friend_id;
@@ -72,16 +74,48 @@ function function_listen(){
     var GLOBALSTATE = {
         route: '.list-account'
     };
-	
-		
+
+
     // Set first Route
     setRoute(GLOBALSTATE.route);
     $('.nav > li[data-route="' + GLOBALSTATE.route + '"]').addClass('active');
-	
+
+
+      if(getQueryVariable('t')=='setting'){
+        //var $target_li = $('.list-setting > ul > li : firstchild');
+    		var $target_nav = $('.nav > li[data-route=".list-setting"]');
+    		//nav to list-text
+    		$target_nav.parent().children().removeClass('active');
+            $target_nav.addClass('active');
+    		setRoute('.list-post');
+    		//change title name
+    		$("#head").find('h1').html('設定');
+    		// timeout just for eyecandy...
+            setTimeout(function() {
+                $('.shown').removeClass('shown');
+                $('.list-post').addClass('shown');
+            		$.post('../php/get_item_post.php',{
+            			datatype:'json'
+            		},function(data){
+            			var obj = JSON.parse(data);
+            			//console.log(obj.list.length);
+            			for(var i=0;i<obj.result.length;i++){
+            				var url = 'https://www.charlie27.me/~test123/index.php?q=drop&s='+obj.result[i].id;
+            				var post_name = obj.result[i].location+' '+obj.result[i].class+' '+obj.result[i].time;
+            			    if(obj.result[i].type=='drop')
+            				  $('.list-post > ul').append('<li><input type="button" value="撿到" class="post_drop"><p onclick="parent.location.href='+"'"+url+"'"+'">'+post_name+'</p><div class="delete_icon"><img src="../image/garbage.png"></div><input type="hidden" name="drop" value="'+obj.result[i].id+'"></li>')
+            			    if(obj.result[i].type=='pick')
+            				  $('.list-post > ul').append('<li><input type="button" value="遺失" class="post_pick"><p>'+post_name+'</p><div class="delete_icon"><img src="../image/garbage.png"></div><input type="hidden" name="pick" value="'+obj.result[i].id+'"></li>')
+            			}
+            		});
+            		setRoute('.list-post');
+            }, 300);
+      }
+
 	//when add new friend opening
 	if(getQueryVariable('s')!=''){
 		var f_name = getQueryVariable('s');
-		var $target_li = $('.list-text span:contains('+f_name+')').parent().find('li');
+		var $target_li = $('.list-text span:contains('+f_name+')').parent().parent();
 		var $target_nav = $('.nav > li[data-route=".list-text"]');
 		//nav to list-text
 		$target_nav.parent().children().removeClass('active');
@@ -91,13 +125,13 @@ function function_listen(){
 		$("#head").find('h1').html(f_name);
 		//prepare chat record
 		$('ul.chat').html('');
-		var friend_id = $target_li.children('input').val();
+		var friend_id = $target_li.find('input').val();
 		// timeout just for eyecandy...
         setTimeout(function() {
             $('.shown').removeClass('shown');
             $('.list-chat').addClass('shown');
 			prepare_chat_record(friend_id);
-        	$target_li.find('.unseen').text('');
+        	$target_li.find('.txt').text('');
             setRoute('.list-chat');
             $('.chat-input').focus();
         }, 300);
@@ -172,7 +206,7 @@ function function_listen(){
 			$("#head").find('h1').html('好友');
 		if(route==='.list-setting')
 			$("#head").find('h1').html('設定');
-			
+
 	}
 
 
@@ -228,7 +262,7 @@ function function_listen(){
             $('.mdi-send').trigger('click');
         }
     });
-	//click into chat 
+	//click into chat
     $('.list-text > ul > li').on('click', function() {
 		//console.log($(this).text());
 		//change title name
@@ -246,7 +280,7 @@ function function_listen(){
             setRoute('.list-chat');
             $('.chat-input').focus();
         }, 300);
-		
+
     });
 
     // List context
@@ -256,7 +290,7 @@ function function_listen(){
         $(this).parent().find('.context').remove();
         $(this).addClass('active');
         var $TARGET = $(this);
-		
+
 		//console.log($sib.html());
         if (!$(this).next().hasClass('context')) {
             var $ctx = $('<li class="context"><i class="mdi mdi-pencil"></i><i class="mdi mdi-delete"></i></li>');
@@ -310,7 +344,7 @@ function function_listen(){
 
     // Navigation
     $('.nav li').on('click', function() {
-		
+
         $(this).parent().children().removeClass('active');
         $(this).addClass('active');
         $('.shown').removeClass('shown');

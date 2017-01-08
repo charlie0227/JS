@@ -8,7 +8,7 @@ $(function(){
 	$('#member').on('click',function(){
 		 location.href='index.php?q=member';
 	});
-	
+
 	if(getQueryVariable('q')=='drop'){
 		if(getQueryVariable('s')!='')
 			frames[0].location.href='drop/item.php?e=e&id='+encodeURIComponent(getQueryVariable('s'));
@@ -25,6 +25,8 @@ $(function(){
 	else if(getQueryVariable('q')=='member'){
 			if(getQueryVariable('s')!='')
 				frames[0].location.href='member/member.php?s='+getQueryVariable('s');
+				else if(getQueryVariable('t')!='')
+					frames[0].location.href='member/member.php?t='+getQueryVariable('t');
 		else
 		 	frames[0].location.href='member/member.php';
  		$('#member').addClass("select_header");

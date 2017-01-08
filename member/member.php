@@ -10,6 +10,10 @@ function get_ip(){
 	  $ip=$_SERVER['REMOTE_ADDR'];
 	return $ip;
 }
+/*
+if(!$_GET['t'])
+	$type='';
+	*/
 ?>
 <!DOCTYPE html>
 <html>
