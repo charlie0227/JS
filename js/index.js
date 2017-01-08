@@ -32,6 +32,9 @@ $(function(){
  		$('#member').addClass("select_header");
 		$("#member > img").attr("src","image/ic_account_box_black_48dp_1x.png");
 	}
+	else{
+		frames[0].location.href='introduction.html';
+	}
 });
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
