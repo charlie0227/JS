@@ -1,6 +1,6 @@
 <?php 
 session_save_path("/home/charlie27/public_html/session_tmp");
-session_start();
+session_start();  
 $db_host = "localhost";
 $db_name = "jangsc27_cs_js";
 $db_user = "charlie27";
