@@ -27,8 +27,6 @@ This web application is main for lost-and-found platform
 * [ssi-uploader] – great file uploader framework
 
 
-# Usage
-[https://www.charlie27.me/~test123/](https://www.charlie27.me/~test123/)
 
 # Author
 - chalir0227  - [github](https://github.com/charlie0227)
