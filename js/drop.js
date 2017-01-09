@@ -121,7 +121,7 @@ load_content = function(refresh, next_page) {
 	// This is a DEMO function which generates DEMO content into the scroller.
 	// Here you should place your AJAX request to fetch the relevant content (e.g. $.post(...))
 
-	console.log(refresh, next_page);
+	//console.log(refresh, next_page);
 	setTimeout(function() { // This immitates the CALLBACK of your AJAX function
 		if (!refresh) {
 			// Loading the initial content

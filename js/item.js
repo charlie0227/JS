@@ -16,9 +16,9 @@ function load(drop_id){
 			}
 			$('#descript').append(obj.result.descript);
 			//console.log('display',obj.display);
-			//0 for no login,1 for norma, 2 for you are owner l
+			//0 for no login,1 for normal, 2 for you are owner
 			if(obj.display==0)
-				$('#display').append('<input class="button" type="button" value="連絡拾獲人" onclick="alert('+'"請先登入確定身分"'+');parent.location.href='+"'../index.php?q=member'"+'">');
+				$('#display').append('<input class="button" type="button" value="連絡拾獲人" onclick="alert('+"'請先登入確定身分'"+');parent.location.href='+"'../index.php?q=member'"+'">');
 			if(obj.display==1)
 				$('#display').append('<input class="button" type="button" value="連絡拾獲人" onclick="add_friend('+"'"+decodeURIComponent(obj.result.id)+"'"+');">');
 			$('#display').append('<input class="button" type="button" value="返回物品列表" onclick="location.href='+"'../drop/drop.html'"+'">');

@@ -92,8 +92,7 @@ if($way=="drop_item"){
 	$result=$sth->fetchObject();
 	$result->id=encrypt($result->id);
 	//0 for no login, 1 for you are owner, 2 for normal
-	$data->display = !isset($_SESSION['id'])?0:
-					($result->member_id==$_SESSION['id'])?2:1;
+	$data->display = isset($_SESSION['id'])?($result->member_id==$_SESSION['id'])?2:1:0;
 	$data->result=$result;
 	//fetch img
 	$sql = "SELECT * FROM `item_drop_img` WHERE `item_id` = ?";
