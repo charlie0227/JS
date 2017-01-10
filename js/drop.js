@@ -356,6 +356,7 @@ function get_position(){
 	}
 	else {
 		var geolocation=window.navigator.geolocation; //取得 Geolocation 物件
+		console.log('a',geolocation);
 		//地理定位程式碼
 		var option={
 		  enableAcuracy:false,
