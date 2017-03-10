@@ -1,19 +1,19 @@
 <?php 
-session_save_path("/home/charlie27/public_html/session_tmp");
+session_save_path("/**/");
 session_start();  
-$db_host = "localhost";
-$db_name = "jangsc27_cs_js";
-$db_user = "charlie27";
-$db_password = "12345678";
+$db_host = "/**/";
+$db_name = "/**/";
+$db_user = "/**/";
+$db_password = "/**/";
 $dsn = "mysql:host=$db_host;dbname=$db_name";
 $db = new PDO($dsn, $db_user, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-$root_dir ="/home/test123/public_html";
+$root_dir ="/**/";
 date_default_timezone_set("Asia/Taipei");
 function write_log($status,$data)  //狀態 資料       
 {
 	$status='<'.$status.'>';
 	$day = date("Y-m");
-    $URL = "/home/charlie27/public_html/log/".$day;
+    $URL = $root_dir."log/".$day;
 	$time= "[".date("Y-m-d H:i:s")."] ";
 	//ip
 	if (!empty($_SERVER['HTTP_CLIENT_IP']))
@@ -33,18 +33,15 @@ function write_log($status,$data)  //狀態 資料
     fclose($fileopen); 
 }
 function encrypt( $q ) {
-    $cryptKey = 'qJB0rGtIn5UB1xG53efyCp';
+    $cryptKey = '/**/';
     $qEncoded = base64_encode( mcrypt_encrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), $q, MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ) );
     return urlencode($qEncoded);
 }
 
 function decrypt( $q ) {
 	$q = urldecode($q);
-    $cryptKey = 'qJB0rGtIn5UB1xG53efyCp';
+    $cryptKey = '/**/';
     $qDecoded = rtrim( mcrypt_decrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), base64_decode( $q ), MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ), "\0");
     return( $qDecoded );
 }
-#$_SESSION['account'] = account
-#$_SESSION['name'] = name
-#$_SESSION['id'] = id
 ?>
